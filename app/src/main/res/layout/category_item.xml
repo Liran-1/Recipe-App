@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    app:cardCornerRadius="16dp">
+
+
+    <RelativeLayout
+        android:id="@+id/category_RLO_option"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/teal_200"
+        android:paddingVertical="16dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="12dp"
+        >
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Name"
+            android:textSize="24sp"
+            android:textStyle="bold"
+
+            />
+
+    </RelativeLayout>
+
+
+</com.google.android.material.card.MaterialCardView>
