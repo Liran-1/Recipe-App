@@ -2,30 +2,95 @@
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    app:cardCornerRadius="16dp">
-
+    android:layout_height="200dp"
+    app:cardCornerRadius="16dp"
+    app:cardElevation="4dp">
 
     <RelativeLayout
-        android:id="@+id/category_RLO_option"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+    >
+    <com.google.android.material.imageview.ShapeableImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+
+        />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/category_TXT_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/teal_200"
-        android:paddingVertical="16dp"
-        android:layout_marginTop="12dp"
-        android:layout_marginBottom="12dp"
-        >
+        android:textColor="@color/white"
+        android:background="@color/cardview_dark_background"
+        android:textSize="20sp"
+        android:text="Category name"
+        android:gravity="center"
+        android:layout_alignParentBottom="true"
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Name"
-            android:textSize="24sp"
-            android:textStyle="bold"
+        />
 
-            />
+
 
     </RelativeLayout>
+
+
+
+<!--    <FrameLayout-->
+<!--        android:id="@+id/idFrame"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_gravity="center">-->
+
+<!--        &lt;!&ndash;on below line we are creating an image button&ndash;&gt;-->
+<!--        <ImageButton-->
+<!--            android:id="@+id/idImgBtn"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:background="@color/purple_200"-->
+<!--            android:padding="10dp"-->
+<!--            android:src="@drawable/ic_launcher_foreground" />-->
+
+<!--        &lt;!&ndash;on below line we are creating a-->
+<!--     text for our image button&ndash;&gt;-->
+<!--        <TextView-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_gravity="center"-->
+<!--            android:layout_marginTop="45dp"-->
+<!--            android:clickable="true"-->
+<!--            android:text="Pasta"-->
+<!--            android:textColor="@color/white"-->
+<!--            android:textStyle="bold" />-->
+<!--    </FrameLayout>-->
+
+    <!--    <androidx.appcompat.widget.AppCompatImageButton-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="match_parent"-->
+    <!--        android:src="@drawable/ic_baseline_add_24"-->
+
+    <!--        />-->
+
+    <!--    <RelativeLayout-->
+    <!--        android:id="@+id/category_RLO_option"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:background="@color/teal_200"-->
+    <!--        android:paddingVertical="16dp"-->
+    <!--        android:layout_marginTop="12dp"-->
+    <!--        android:layout_marginBottom="12dp"-->
+    <!--        >-->
+
+    <!--        <TextView-->
+    <!--            android:layout_width="match_parent"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:text="Name"-->
+    <!--            android:textSize="24sp"-->
+    <!--            android:textStyle="bold"-->
+
+    <!--            />-->
+
+    <!--    </RelativeLayout>-->
 
 
 </com.google.android.material.card.MaterialCardView>
