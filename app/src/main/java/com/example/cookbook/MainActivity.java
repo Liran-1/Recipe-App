@@ -35,9 +35,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // override the onOptionsItemSelected()
-    // function to implement 
+    // function to implement
     // the item click listener callback
-    // to open and close the navigation 
+    // to open and close the navigation
     // drawer when the icon is clicked
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
