@@ -4,22 +4,52 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/food_background"
     tools:context=".MainActivity">
 
     <androidx.drawerlayout.widget.DrawerLayout
-        android:id="@+id/my_drawer_layout"
+        android:id="@+id/main_DRWR_loggedIn"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:fitsSystemWindows="true"
+        tools:openDrawer="start"
         tools:context=".MainActivity"
         >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            >
+
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/main_TLBR_toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:background="@color/orange_500_light"
+                android:elevation="4dp"
+                android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+                />
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/main_FRG_fragment"
+                />
+
+        </LinearLayout>
+
 
         <!-- this the navigation view which draws and shows the navigation drawer -->
         <!-- include the menu created in the menu folder -->
         <com.google.android.material.navigation.NavigationView
+            android:id="@+id/main_NAVVW_NavDrawer"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_gravity="start"
-            app:menu="@menu/navigation_menu" />
+            app:menu="@menu/navigation_menu"
+            app:headerLayout="@layout/nav_header"/>
 
     </androidx.drawerlayout.widget.DrawerLayout>
 

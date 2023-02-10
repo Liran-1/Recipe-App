@@ -1,20 +1,66 @@
 {
   "project_info": {
     "project_number": "38830118759",
+    "firebase_url": "https://cookapp-358b1-default-rtdb.europe-west1.firebasedatabase.app",
     "project_id": "cookapp-358b1",
     "storage_bucket": "cookapp-358b1.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:38830118759:android:58b84bd53294c139b781c2",
+        "mobilesdk_app_id": "1:38830118759:android:2c4d206d2fd3cb8db781c2",
         "android_client_info": {
           "package_name": "com.example.cookbook"
         }
       },
       "oauth_client": [
         {
-          "client_id": "38830118759-nupcckt2p0lnrmpm0ufi9ocu170jplm8.apps.googleusercontent.com",
+          "client_id": "38830118759-fnp9gbd6di0ikai47itltou2qh7lrker.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.cookbook",
+            "certificate_hash": "922f4f44e0bb6adcdecb3d03b8c3ebf6a3ad4bb0"
+          }
+        },
+        {
+          "client_id": "38830118759-p5ul9l96dibk3n1148lu8soev8ldt5a6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC4rKiLZD0aPvhbALZs3ZrFVmL2gAMi6SM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "38830118759-nupcckt2p0lnrmpm0ufi9ocu170jplm8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:38830118759:android:58b84bd53294c139b781c2",
+        "android_client_info": {
+          "package_name": "com.example.cookeat"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "38830118759-qkrev44u1ih9g6bvg21gseeb867qfvqh.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.cookeat",
+            "certificate_hash": "922f4f44e0bb6adcdecb3d03b8c3ebf6a3ad4bb0"
+          }
+        },
+        {
+          "client_id": "38830118759-p5ul9l96dibk3n1148lu8soev8ldt5a6.apps.googleusercontent.com",
           "client_type": 3
         }
       ],

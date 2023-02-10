@@ -78,6 +78,8 @@ public class UserAuthentication extends AppCompatActivity {
                 .createSignInIntentBuilder()
                 .setAvailableProviders(providers)
                 .build();
+
+
         signInLauncher.launch(signInIntent);
     }
 

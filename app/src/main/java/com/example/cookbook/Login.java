@@ -7,9 +7,11 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract;
@@ -30,6 +32,8 @@ public class Login extends AppCompatActivity {
     public ActionBarDrawerToggle actionBarDrawerToggle;
 
     private FirebaseAuth mAuth;
+    private Toast toaster;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,14 +45,21 @@ public class Login extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
 
         FirebaseUser user = mAuth.getCurrentUser();
-        if (user == null) {
+        if (user == null) {                     // User not logged in
             login();
-        } else {
+        } else {                                // User logged in
             String uid = user.getUid();
             String phone = user.getPhoneNumber();
             String name = user.getDisplayName();
             String email = user.getEmail();
-            int x = 0;
+
+            startActivity(new Intent(this, MainActivity.class)
+                    .putExtra("UID", uid)
+                    .putExtra("Phone", phone)
+                    .putExtra("name",name)
+                    .putExtra("Email", email)
+            );
+            finish();
         }
     }
 
@@ -64,7 +75,6 @@ public class Login extends AppCompatActivity {
         actionBarDrawerToggle.syncState();
 
         // to make the Navigation drawer icon always appear on the action bar
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     // override the onOptionsItemSelected()
@@ -112,22 +122,39 @@ public class Login extends AppCompatActivity {
         if (result.getResultCode() == RESULT_OK) {
             // Successfully signed in
             FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-            // ...
+
+            String message = "Signed in successfully";
+            toaster = Toast
+                    .makeText(this, message, Toast.LENGTH_SHORT);
+            toaster.show();
+
+            Intent startIntent = new Intent(Login.this,
+                    MainActivity.class);
+            startIntent.putExtra(MainActivity.FIREBASE_USER, user);
+            startActivity(startIntent);
+
+            finish();
         } else {
             // Sign in failed. If response is null the user canceled the
             // sign-in flow using the back button. Otherwise check
             // response.getError().getErrorCode() and handle the error.
-            // ...
-        }
+            String message = "Sign in failed";
+            toaster = Toast
+                    .makeText(this, message, Toast.LENGTH_SHORT);
+            toaster.show();        }
     }
 
     public void signOut() {
+        Context context = this;
         // [START auth_fui_signout]
         AuthUI.getInstance()
                 .signOut(this)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     public void onComplete(@NonNull Task<Void> task) {
-                        // ...
+                        String message = "Logged out";
+                        toaster = Toast
+                                .makeText(context, message, Toast.LENGTH_SHORT);
+                        toaster.show();
                     }
                 });
         // [END auth_fui_signout]
