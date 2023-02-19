@@ -1,22 +1,35 @@
 <resources>
     <string name="app_name">CookBook</string>
     <!-- to toggle the open close button of the navigation drawer -->
-    <string name="nav_open">Open</string>
-    <string name="nav_close">Close</string>
+    <string name="nav_open" translatable="false">Open</string>
+    <string name="nav_close" translatable="false">Close</string>
     <string-array name="Amounts">
-        <!--        <item>Units</item>-->
-        <!--        <item>Grams</item>-->
-        <!--        <item>KiloGrams</item>-->
-        <!--        <item>MilliLiters</item>-->
-        <!--        <item>Liters</item>-->
-        <!--        <item>Tea Spoon</item>-->
-        <!--        <item>Table Spoon</item>-->
-        <!--        <item>Cups</item>-->
+        <item>Units</item>
+        <item>g</item>
+        <item>kg</item>
+        <item>lbs</item>
+        <item>ml</item>
+        <item>lit.</item>
+        <item>oz</item>
+        <item>tsp</item>
+        <item>tbsp</item>
+        <item>cups</item>
     </string-array>
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="hello_blank_fragment" translatable="false">Hello blank fragment</string>
     <string name="login">Login</string>
     <string name="e_mail">E-mail</string>
     <string name="password">Password</string>
     <string name="login_by_phone">Login by phone</string>
+
+    <string name="register">Register</string>
+    <string name="user_name">User Name</string>
+    <string name="phone_number">Phone Number</string>
+    <string name="already_have_an_account">Already have an account?</string>
+    <string name="don_t_have_an_account">Don\'t have an account?</string>
+    <string name="home">Home</string>
+    <string name="my_account">My Account</string>
+    <string name="settings">Settings</string>
+    <string name="logout">Logout</string>
+    <string name="description">Description</string>
 </resources>

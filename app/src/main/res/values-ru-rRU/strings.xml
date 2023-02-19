@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">CookBook</string>
+    <string name="login">Авторизоваться</string>
+    <string name="e_mail">Электронная почта</string>
+    <string name="password">Пароль</string>
+    <string name="register">Регистр</string>
+    <string name="user_name">Имя Пользователя</string>
+    <string name="phone_number">Номер Телефона</string>
+    <string name="already_have_an_account">Иметь Аккаунт?</string>
+    <string name="don_t_have_an_account">Нет Аккаунта?</string>
+    <string name="home">Дом</string>
+    <string name="my_account">Мой Аккаунт</string>
+    <string name="settings">Настройки</string>
+    <string name="logout">Выйти</string>
+</resources>

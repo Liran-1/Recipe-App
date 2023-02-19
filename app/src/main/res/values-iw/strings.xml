@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">CookBook</string>
+    <string name="login">התחברות</string>
+    <string name="e_mail">דוא\"ל</string>
+    <string name="password">סיסמא</string>
+    <string name="login_by_phone">התחברות באמצעות נייד</string>
+    <string name="register">הרשמה</string>
+    <string name="user_name">שם משתמש</string>
+    <string name="phone_number">מספר טלפון</string>
+    <string name="already_have_an_account">חשבון קיים?</string>
+    <string name="don_t_have_an_account">אין חשבון עדיין?</string>
+    <string name="home">בית</string>
+    <string name="my_account">החשבון שלי</string>
+    <string name="settings">הגדרות</string>
+    <string name="logout">התנתקות</string>
+</resources>

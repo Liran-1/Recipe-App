@@ -10,7 +10,12 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.firebase.ui.auth.AuthUI;
@@ -19,6 +24,9 @@ import com.firebase.ui.auth.IdpResponse;
 import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.button.MaterialButton;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -28,11 +36,12 @@ import java.util.List;
 
 public class Login extends AppCompatActivity {
 
-    public DrawerLayout drawerLayout;
-    public ActionBarDrawerToggle actionBarDrawerToggle;
-
-    private FirebaseAuth mAuth;
+    //    private TextInputEditText etEmail, etPass;
+//    private MaterialButton bLogin;
+//    private ProgressBar progressBar;
+//    private TextView textView;
     private Toast toaster;
+    private FirebaseAuth mAuth;
 
 
     @Override
@@ -40,57 +49,124 @@ public class Login extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        setDrawerMenu();
+//        findViews();
+//        initViews();
 
         mAuth = FirebaseAuth.getInstance();
-
         FirebaseUser user = mAuth.getCurrentUser();
-        if (user == null) {                     // User not logged in
+        if (user == null) {
             login();
-        } else {                                // User logged in
-            String uid = user.getUid();
-            String phone = user.getPhoneNumber();
-            String name = user.getDisplayName();
-            String email = user.getEmail();
+        } else {
+            userLoggedIn();
 
-            startActivity(new Intent(this, MainActivity.class)
-                    .putExtra("UID", uid)
-                    .putExtra("Phone", phone)
-                    .putExtra("name",name)
-                    .putExtra("Email", email)
-            );
-            finish();
         }
+
     }
 
-    private void setDrawerMenu() {
-        // drawer layout instance to toggle the menu icon to open
-        // drawer and back button to close drawer
-        drawerLayout = findViewById(R.id.my_drawer_layout);
-        actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.nav_open, R.string.nav_close);
+    private void login() {
+        // Choose authentication providers
+        List<AuthUI.IdpConfig> providers = Arrays.asList(
+                new AuthUI.IdpConfig.EmailBuilder().build(),
+//                new AuthUI.IdpConfig.GoogleBuilder().build(),
+                new AuthUI.IdpConfig.PhoneBuilder().build());
 
-        // pass the Open and Close toggle for the drawer layout listener
-        // to toggle the button
-        drawerLayout.addDrawerListener(actionBarDrawerToggle);
-        actionBarDrawerToggle.syncState();
-
-        // to make the Navigation drawer icon always appear on the action bar
+        // Create and launch sign-in intent
+        Intent signInIntent = AuthUI.getInstance()
+                .createSignInIntentBuilder()
+                .setAvailableProviders(providers)
+                .build();
+        signInLauncher.launch(signInIntent);
     }
 
-    // override the onOptionsItemSelected()
-    // function to implement
-    // the item click listener callback
-    // to open and close the navigation
-    // drawer when the icon is clicked
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+//    private void findViews() {
+//        etEmail = findViewById(R.id.register_ETXT_email);
+//        etPass = findViewById(R.id.register_ETXT_pass);
+//
+//        bLogin = findViewById(R.id.login_BTN_login);
+//
+//        progressBar = findViewById(R.id.login_PRGBR_progressBar);
+//
+//        textView = findViewById(R.id.login_TXTV_goToRegister);
+//    }
 
-        if (actionBarDrawerToggle.onOptionsItemSelected(item)) {
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
+//    private void initViews() {
+//        textView.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Intent intent = new Intent(getApplicationContext(), Register.class);
+//                startActivity(intent);
+//                finish();
+//            }
+//        });
+//
+//        bLogin.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                progressBar.setVisibility(View.VISIBLE);
+//
+//                String email, password;
+//                email = etEmail.getText().toString();
+//                password = etPass.getText().toString();
+//
+//                if (checkIfEmpty(email, etEmail.getHint().toString()) ||
+//                        checkIfEmpty(password, etPass.getHint().toString())) {
+//                    return;
+//                }
+//
+//                mAuth.signInWithEmailAndPassword(email, password)
+//                        .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+//                            @Override
+//                            public void onComplete(@NonNull Task<AuthResult> task) {
+//                                if (task.isSuccessful()) {
+//                                    // Sign in success, update UI with the signed-in user's information
+//                                    Log.d("Logged in Successfully", "signInWithEmail:success");
+//                                    FirebaseUser user = mAuth.getCurrentUser();
+//                                    updateUI(user);
+//                                } else {
+//                                    // If sign in fails, display a message to the user.
+//                                    Log.w("Log in Failed", "signInWithEmail:failure", task.getException());
+//                                    Toast.makeText(EmailPasswordActivity.this, "Authentication failed.",
+//                                            Toast.LENGTH_SHORT).show();
+//                                    updateUI(null);
+//                                }
+//                            }
+//                        });
+//
+////                mAuth.signInWithEmailAndPassword(email, password)
+////                        .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+////                            @Override
+////                            public void onComplete(@NonNull Task<AuthResult> task) {
+////                                progressBar.setVisibility(View.GONE);
+////                                if (task.isSuccessful()) {
+////
+////                                    FirebaseUser user = mAuth.getCurrentUser();
+////
+////                                    toaster = Toast
+////                                            .makeText(Login.this,
+////                                                    "Hello " + user.getDisplayName() + "!",
+////                                                    Toast.LENGTH_SHORT);
+////                                    toaster.show();
+////
+////                                    userLoggedIn();
+////
+////                                    // Sign in success, update UI with the signed-in user's information
+////                                    Log.d("Logged in Successfully", "signInWithEmail:success");
+////                                } else {
+////                                    // If sign in fails, display a message to the user.
+////                                    Log.w("Log in Failed", "signInWithEmail:failure",
+////                                            task.getException());
+////
+////                                    toaster = Toast.makeText(Login.this,
+////                                            "Authentication failed.", Toast.LENGTH_SHORT);
+////                                    toaster.show();
+////                                }
+////                            }
+////                        });
+//            }
+//        });
+//    }
 
+    // See: https://developer.android.com/training/basics/intents/result
     private final ActivityResultLauncher<Intent> signInLauncher = registerForActivityResult(
             new FirebaseAuthUIActivityResultContract(),
             new ActivityResultCallback<FirebaseAuthUIAuthenticationResult>() {
@@ -101,47 +177,8 @@ public class Login extends AppCompatActivity {
             }
     );
 
-    public void createSignInIntent() {
-        // [START auth_fui_create_intent]
-        // Choose authentication providers
-        List<AuthUI.IdpConfig> providers = Arrays.asList(
-                new AuthUI.IdpConfig.EmailBuilder().build(),
-                new AuthUI.IdpConfig.PhoneBuilder().build());
-
-        // Create and launch sign-in intent
-        Intent signInIntent = AuthUI.getInstance()
-                .createSignInIntentBuilder()
-                .setAvailableProviders(providers)
-                .build();
-        signInLauncher.launch(signInIntent);
-        // [END auth_fui_create_intent]
-    }
-
     private void onSignInResult(FirebaseAuthUIAuthenticationResult result) {
-        IdpResponse response = result.getIdpResponse();
-        if (result.getResultCode() == RESULT_OK) {
-            // Successfully signed in
-            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-
-            String message = "Signed in successfully";
-            toaster = Toast
-                    .makeText(this, message, Toast.LENGTH_SHORT);
-            toaster.show();
-
-            Intent startIntent = new Intent(Login.this,
-                    MainActivity.class);
-            startIntent.putExtra(MainActivity.FIREBASE_USER, user);
-            startActivity(startIntent);
-
-            finish();
-        } else {
-            // Sign in failed. If response is null the user canceled the
-            // sign-in flow using the back button. Otherwise check
-            // response.getError().getErrorCode() and handle the error.
-            String message = "Sign in failed";
-            toaster = Toast
-                    .makeText(this, message, Toast.LENGTH_SHORT);
-            toaster.show();        }
+        userLoggedIn();
     }
 
     public void signOut() {
@@ -160,31 +197,29 @@ public class Login extends AppCompatActivity {
         // [END auth_fui_signout]
     }
 
-    public void themeAndLogo() {
-        List<AuthUI.IdpConfig> providers = Collections.emptyList();
-
-        // [START auth_fui_theme_logo]
-        Intent signInIntent = AuthUI.getInstance()
-                .createSignInIntentBuilder()
-                .setAvailableProviders(providers)
-                .build();
-        signInLauncher.launch(signInIntent);
-        // [END auth_fui_theme_logo]
+    @Override
+    public void onStart() {
+        super.onStart();
+        // Check if user is signed in (non-null) and update UI accordingly.
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if (currentUser != null) {
+            userLoggedIn();
+        }
     }
 
-    private void login() {
-        // Choose authentication providers
-        List<AuthUI.IdpConfig> providers = Arrays.asList(
-                new AuthUI.IdpConfig.EmailBuilder().build(),
-//                new AuthUI.IdpConfig.GoogleBuilder().build(),
-                new AuthUI.IdpConfig.PhoneBuilder().build());
+    private void userLoggedIn() {
+        Intent intent = new Intent(Login.this, MainActivity.class);
+        startActivity(intent);
+        finish();
+    }
 
-        // Create and launch sign-in intent
-        Intent signInIntent = AuthUI.getInstance()
-                .createSignInIntentBuilder()
-                .setAvailableProviders(providers)
-                .build();
-        signInLauncher.launch(signInIntent);
+    private boolean checkIfEmpty(String input, String msg) {
+        if (TextUtils.isEmpty(input)) {
+            toaster = Toast.makeText(Login.this, "Enter " + msg, Toast.LENGTH_SHORT);
+            toaster.show();
+            return true;
+        }
+        return false;
     }
 
 }
