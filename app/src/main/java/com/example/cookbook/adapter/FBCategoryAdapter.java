@@ -36,7 +36,7 @@ public class FBCategoryAdapter extends FirebaseRecyclerAdapter<Category,
     @Override
     public FBCategoryViewholder onCreateViewHolder(@NonNull ViewGroup parent, int viewType){
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.category_recyclerview, parent, false);
+                .inflate(R.layout.recyclerview_category, parent, false);
 
         return new FBCategoryAdapter.FBCategoryViewholder(view);
     }
@@ -85,7 +85,7 @@ public class FBCategoryAdapter extends FirebaseRecyclerAdapter<Category,
         {
             super(itemView);
 
-            category_TXT_name = (TextView) itemView.findViewById(R.id.category_TXT_name);
+            category_TXT_name = (TextView) itemView.findViewById(R.id.category_LBL_name);
             category_IMG_category = (ImageView) itemView.findViewById(R.id.category_IMG_category);
         }
     }

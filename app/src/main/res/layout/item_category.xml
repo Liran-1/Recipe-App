@@ -4,12 +4,15 @@
     android:layout_width="wrap_content"
     android:layout_height="200dp"
     app:cardCornerRadius="16dp"
-    app:cardElevation="4dp">
+    app:cardElevation="4dp"
+    android:layout_marginStart="16dp"
+    android:layout_marginEnd="16dp"
+    android:layout_marginBottom="8dp">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="8dp">
+        >
 
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/category_IMG_category"
@@ -19,15 +22,15 @@
             android:scaleType="centerCrop" />
 
         <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/category_TXT_name"
+            android:id="@+id/category_LBL_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:background="@color/cardview_dark_background"
             android:gravity="center"
-            android:text="Category name"
+            android:text="@string/category_name"
             android:textColor="@color/white"
-            android:textSize="20sp" />
+            android:textSize="24sp" />
 
 
     </RelativeLayout>

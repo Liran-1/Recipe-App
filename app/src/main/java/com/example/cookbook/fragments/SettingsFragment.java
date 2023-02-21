@@ -15,6 +15,8 @@ import com.example.cookbook.callbacks.OnBackPressedCallback;
 
 public class SettingsFragment extends Fragment implements OnBackPressedCallback {
 
+    private CategoryRVFragment categoryRVFragment;                  // for return
+
     public static OnBackPressedCallback onBackPressedCallback;
 
     @Override
@@ -26,11 +28,13 @@ public class SettingsFragment extends Fragment implements OnBackPressedCallback 
 
 
 
-
+    public void setCategoryRVFragment(CategoryRVFragment categoryRVFragment) {
+        this.categoryRVFragment = categoryRVFragment;
+    }
 
     @Override
     public void onBackPressed() {
-        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.main_FRG_fragment, new HomeFragment()).commit();
+        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.main_FRG_fragment, categoryRVFragment).commit();
         navigationView.setCheckedItem(R.id.nav_home);
     }
 
@@ -45,4 +49,5 @@ public class SettingsFragment extends Fragment implements OnBackPressedCallback 
         super.onPause();
         onBackPressedCallback = null;
     }
+
 }

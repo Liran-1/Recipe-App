@@ -4,25 +4,24 @@ import java.util.ArrayList;
 
 public class User {
 
-    private String username, email, phoneNumber, password;
+    private String name, email, phoneNumber;
     private ArrayList<Recipe> recipeArrayList;
 
     public User() {
     }
 
-    public User(String username, String email, String phoneNumber, String password) {
-        this.username = username;
+    public User(String name, String email, String phoneNumber) {
+        this.name = name;
         this.email = email;
         this.phoneNumber = phoneNumber;
-        this.password = password;
     }
 
-    public String getUsername() {
-        return username;
+    public String getName() {
+        return name;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getEmail() {
@@ -41,11 +40,13 @@ public class User {
         this.phoneNumber = phoneNumber;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
+    @Override
+    public String toString() {
+        return "User{" +
+                "name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", recipeArrayList=" + recipeArrayList +
+                '}';
     }
 }

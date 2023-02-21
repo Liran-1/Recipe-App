@@ -11,7 +11,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.cookbook.R;
-import com.example.cookbook.callbacks.IngredientRemoveCallback;
 import com.example.cookbook.models.Ingredient;
 
 import java.util.ArrayList;
@@ -39,7 +38,7 @@ public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.In
     @Override
     public IngredientViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.ingredient_item, parent, false);
+                .inflate(R.layout.item_ingredient, parent, false);
         IngredientViewHolder ingredientViewHolder = new IngredientViewHolder(view, onRemoveClicked);
 
         return ingredientViewHolder;
@@ -50,7 +49,7 @@ public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.In
         Ingredient ingredient = getItem(position);
 
         holder.ingredient_TXT_ingredientName.setText(ingredient.getName());
-        holder.ingredient_TXT_ingredientAmount.setText(ingredient.getAmount());
+        holder.ingredient_TXT_ingredientAmount.setText(ingredient.getAmount() + "");
         holder.ingredient_TXT_ingredientUnit.setText(ingredient.getUnits());
 
 //        holder.ingredient_IBTN_remove.setOnClickListener(new View.OnClickListener() {
@@ -84,13 +83,13 @@ public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.In
         public IngredientViewHolder(@NonNull View itemView, IngredientRemoveClicked ingredientRemovedClicked) {
             super(itemView);
 
-            ingredient_TXT_ingredientName = (TextView) itemView
+            ingredient_TXT_ingredientName = itemView
                     .findViewById(R.id.ingredient_TXT_ingredientName);
-            ingredient_TXT_ingredientAmount = (TextView) itemView
+            ingredient_TXT_ingredientAmount = itemView
                     .findViewById(R.id.ingredient_TXT_ingredientAmount);
-            ingredient_TXT_ingredientUnit = (TextView) itemView
+            ingredient_TXT_ingredientUnit = itemView
                     .findViewById(R.id.ingredient_TXT_ingredientUnit);
-            ingredient_IBTN_remove = (ImageButton) itemView
+            ingredient_IBTN_remove = itemView
                     .findViewById(R.id.ingredient_IBTN_remove);
 
             ingredient_IBTN_remove.setOnClickListener(new View.OnClickListener() {

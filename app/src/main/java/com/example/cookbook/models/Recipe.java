@@ -4,16 +4,19 @@ import java.util.ArrayList;
 
 public class Recipe {
 
-    private String name, description, image, instructions, category;
+    private String name, description, image, instructions, categoryId;
     private int likes;
     private ArrayList<Ingredient> ingredients;
 
-    public Recipe(String name, String description, String image, String instructions, String category, int likes, ArrayList<Ingredient> ingredients) {
+    public Recipe() {
+    }
+
+    public Recipe(String name, String description, String image, String instructions, String categoryId, int likes, ArrayList<Ingredient> ingredients) {
         this.name = name;
         this.description = description;
         this.image = image;
         this.instructions = instructions;
-        this.category = category;
+        this.categoryId = categoryId;
         this.likes = likes;
         this.ingredients = ingredients;
     }
@@ -50,12 +53,12 @@ public class Recipe {
         this.instructions = instructions;
     }
 
-    public String getCategory() {
-        return category;
+    public String getCategoryId() {
+        return categoryId;
     }
 
-    public void setCategory(String category) {
-        this.category = category;
+    public void setCategoryId(String categoryId) {
+        this.categoryId = categoryId;
     }
 
     public ArrayList<Ingredient> getIngredients() {

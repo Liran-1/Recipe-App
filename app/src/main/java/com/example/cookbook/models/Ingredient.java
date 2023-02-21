@@ -3,10 +3,13 @@ package com.example.cookbook.models;
 public class Ingredient {
 
     private String name;
-    private String amount;
+    private double amount;
     private String units;
 
-    public Ingredient(String name, String amount, String units) {
+    public Ingredient() {
+    }
+
+    public Ingredient(String name, double amount, String units) {
         this.name = name;
         this.amount = amount;
         this.units = units;
@@ -21,11 +24,11 @@ public class Ingredient {
         return this;
     }
 
-    public String getAmount() {
+    public double getAmount() {
         return amount;
     }
 
-    public Ingredient setAmount(String amount) {
+    public Ingredient setAmount(double amount) {
         this.amount = amount;
         return this;
     }

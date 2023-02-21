@@ -10,9 +10,12 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.Spinner;
 
@@ -25,11 +28,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.cookbook.R;
-import com.example.cookbook.activities.MainActivity;
 import com.example.cookbook.adapter.IngredientAdapter;
-import com.example.cookbook.callbacks.IngredientAddedCallback;
-import com.example.cookbook.callbacks.IngredientRemoveCallback;
 import com.example.cookbook.callbacks.OnBackPressedCallback;
+import com.example.cookbook.models.Category;
 import com.example.cookbook.models.Ingredient;
 import com.example.cookbook.models.Recipe;
 import com.example.cookbook.utils.RecipeSP;
@@ -37,9 +38,11 @@ import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class CreateRecipeFragment extends Fragment implements OnBackPressedCallback {
@@ -51,22 +54,47 @@ public class CreateRecipeFragment extends Fragment implements OnBackPressedCallb
     private RecyclerView recipeCreation_RV_ingredients;
     private IngredientAdapter ingredientAdapter;
     private ArrayList<Ingredient> ingredients;
+    private ArrayList<String> categoriesName;
     private Uri cam_uri;
 
     public static OnBackPressedCallback onBackPressedCallback;
 
-    private DatabaseReference mDatabase;
+    private FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+    private FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
+    private DatabaseReference dbRef = mDatabase.getReference();
+    private CategoryRVFragment categoryRVFragment;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.create_recipe_fragment, container, false);
+        View view = inflater.inflate(R.layout.fragment_create_recipe, container, false);
+
+        categoriesName = getCategoriesName();
         findViews(view);
         initViews();
 
-        mDatabase = FirebaseDatabase.getInstance().getReference();
-
         return view;
+    }
+
+    private ArrayList<String> getCategoriesName() {
+            ArrayList<String> categories = new ArrayList<>();
+            dbRef.child("Category").get().addOnCompleteListener(task -> {
+                if (!task.isSuccessful()) {
+                    Log.e("firebase", "Error getting data", task.getException());
+                }
+                else {
+                    //                    categories = (ArrayList) task.getResult().getValue();
+                    Log.d("firebase", String.valueOf(task.getResult().getKey()));
+                    for(DataSnapshot dataSnapshot: task.getResult().getChildren()){
+                        String name = String.valueOf(dataSnapshot.child("Name").getValue());
+                        Log.d("name", name);
+                        categories.add(name);
+                    }
+                }
+            });
+
+            return categories;
+
     }
 
     private void initViews() {
@@ -83,6 +111,27 @@ public class CreateRecipeFragment extends Fragment implements OnBackPressedCallb
         recipeCreation_IMG_picture  .setOnClickListener(view -> openCamera());
 
         recipeCreation_BTN_addRecipe.setOnClickListener(view -> addRecipe());
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, categoriesName);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        for(String s: categoriesName){
+            adapter.add(s);
+        }
+        recipeCreation_SPNR_categories.setAdapter(adapter);
+        recipeCreation_SPNR_categories.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
+//                String chosenCategory = adapterView.getItemAtPosition(position).toString();
+                recipeCreation_SPNR_categories.setSelection(position);
+                Log.d("SELECTED", recipeCreation_SPNR_categories.toString());
+                adapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+            }
+        });
+
 
         ingredientAdapter = new IngredientAdapter(getContext(), ingredients);
         recipeCreation_RV_ingredients.setHasFixedSize(true);
@@ -103,14 +152,17 @@ public class CreateRecipeFragment extends Fragment implements OnBackPressedCallb
     }
 
     private void addRecipe() {
+        if(checkInput())
+            return;
+
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
         String name         = recipeCreation_ETXT_name.getText().toString();
         String description  = recipeCreation_ETXT_description.getText().toString();
         String instructions = recipeCreation_ETXT_instructions.getText().toString();
-//        String category = recipeCreation_SPNR_categories.getSelectedItem().toString();
-        String category     ="test";
+        String category     = recipeCreation_SPNR_categories.getSelectedItem().toString();
         String image        = recipeCreation_IMG_picture.toString();
+//        String category     ="test";
         int likes           = 0;
 
         recipeCreation_ETXT_name.getText().clear();
@@ -122,25 +174,34 @@ public class CreateRecipeFragment extends Fragment implements OnBackPressedCallb
 
         Recipe recipe = new Recipe(name, description, image, instructions, category, likes,  ingredients);
 
-        mDatabase.child("users").child(firebaseUser.getUid())
+        dbRef.child("users").child(firebaseUser.getUid())
                 .child("user-recipes").child(name).setValue(recipe);
+//        mDatabase.child("Category").child()
+    }
+
+    private boolean checkInput() {
+        String[] category = getResources().getStringArray(R.array.Categories);
+        return !TextUtils.isEmpty(recipeCreation_ETXT_name.getText()) &&
+                !TextUtils.isEmpty(recipeCreation_ETXT_description.getText()) &&
+                !TextUtils.isEmpty(recipeCreation_ETXT_instructions.getText()) &&
+                recipeCreation_SPNR_categories.getSelectedItem().toString().equals(category[0]);
     }
 
     private void findViews(View view) {
-        recipeCreation_ETXT_name = view.findViewById(R.id.recipeCreation_ETXT_name);
-        recipeCreation_ETXT_description = view.findViewById(R.id.recipeCreation_ETXT_description);
-        recipeCreation_IMG_picture = view.findViewById(R.id.recipeCreation_IMG_picture);
+        recipeCreation_ETXT_name            = view.findViewById(R.id.recipeCreation_ETXT_name);
+        recipeCreation_ETXT_description     = view.findViewById(R.id.recipeCreation_ETXT_description);
+        recipeCreation_IMG_picture          = view.findViewById(R.id.recipeCreation_IMG_picture);
 
-        ingredient_ETXT_ingredientName = view.findViewById(R.id.ingredient_ETXT_ingredientName);
-        ingredient_ETXT_ingredientAmount = view.findViewById(R.id.ingredient_ETXT_ingredientAmount);
-        ingredient_SPNR_ingredientUnit = view.findViewById(R.id.ingredient_SPNR_ingredientUnit);
-        ingredient_BTN_addIngredient = view.findViewById(R.id.ingredient_BTN_addIngredient);
+        ingredient_ETXT_ingredientName      = view.findViewById(R.id.ingredient_ETXT_ingredientName);
+        ingredient_ETXT_ingredientAmount    = view.findViewById(R.id.ingredient_ETXT_ingredientAmount);
+        ingredient_SPNR_ingredientUnit      = view.findViewById(R.id.ingredient_SPNR_ingredientUnit);
+        ingredient_BTN_addIngredient        = view.findViewById(R.id.ingredient_BTN_addIngredient);
 
-        recipeCreation_RV_ingredients = view.findViewById(R.id.recipeCreation_RV_ingredients);
+        recipeCreation_RV_ingredients       = view.findViewById(R.id.recipeCreation_RV_ingredients);
 
-        recipeCreation_ETXT_instructions = view.findViewById(R.id.recipeCreation_ETXT_instructions);
-        recipeCreation_SPNR_categories = view.findViewById(R.id.recipeCreation_SPNR_categories);
-        recipeCreation_BTN_addRecipe = view.findViewById(R.id.recipeCreation_BTN_addRecipe);
+        recipeCreation_ETXT_instructions    = view.findViewById(R.id.recipeCreation_ETXT_instructions);
+        recipeCreation_SPNR_categories      = view.findViewById(R.id.recipeCreation_SPNR_categories);
+        recipeCreation_BTN_addRecipe        = view.findViewById(R.id.recipeCreation_BTN_addRecipe);
     }
 
     /////CAMERA/////
@@ -190,7 +251,7 @@ public class CreateRecipeFragment extends Fragment implements OnBackPressedCallb
             return;
         } else {
             String name     = ingredient_ETXT_ingredientName.getText().toString();
-            String amount   = ingredient_ETXT_ingredientAmount.getText().toString();
+            double amount   = Double.parseDouble(ingredient_ETXT_ingredientAmount.getText().toString());
             String unit     = ingredient_SPNR_ingredientUnit.getSelectedItem().toString();
 
             Ingredient ingredient = new Ingredient(name, amount, unit);
@@ -218,7 +279,7 @@ public class CreateRecipeFragment extends Fragment implements OnBackPressedCallb
     @Override
     public void onBackPressed() {
         getActivity().getSupportFragmentManager().beginTransaction()
-                .replace(R.id.main_FRG_fragment, new HomeFragment()).commit();
+                .replace(R.id.main_FRG_fragment, categoryRVFragment).commit();
         navigationView.setCheckedItem(R.id.nav_home);
     }
 
@@ -232,5 +293,9 @@ public class CreateRecipeFragment extends Fragment implements OnBackPressedCallb
     public void onPause() {
         super.onPause();
         onBackPressedCallback = null;
+    }
+
+    public void setCategoryRVFragment(CategoryRVFragment categoryRVFragment) {
+        this.categoryRVFragment = categoryRVFragment;
     }
 }

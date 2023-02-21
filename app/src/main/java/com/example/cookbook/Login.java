@@ -46,6 +46,7 @@ public class Login extends AppCompatActivity {
         if (user == null) {
             login();
         } else {
+
             userLoggedIn();
 
         }

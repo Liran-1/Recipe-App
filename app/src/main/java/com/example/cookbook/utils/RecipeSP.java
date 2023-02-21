@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
 
+import com.example.cookbook.models.Category;
 import com.example.cookbook.models.Ingredient;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
@@ -15,6 +16,7 @@ public class RecipeSP {
 
     private static final String DB_FILE = "DB_FILE";
     private static final String RECIPE_RECORDS = "RECIPE_RECORDS";
+    private static final String CATEGORY_RECORDS = "CATEGORY_RECORDS";
 
     private final int HIGH_SCORE_LIST_SIZE = 10;
 
@@ -54,7 +56,27 @@ public class RecipeSP {
         editor.putString(RECIPE_RECORDS, json);
         editor.commit();
         Log.d("SAVED_FILE", json);
+    }
 
+    public ArrayList<Category> getCategories() {
+        TypeToken<List<Category>> listType = new TypeToken<List<Category>>() {};
+        Gson gson = new Gson();
+        String recipeData = preferences.getString(CATEGORY_RECORDS, "");
+        ArrayList<Category> categories = gson.fromJson(recipeData, listType.getType());
+        Log.d("LOADED FILE", recipeData);
+        return categories != null ? categories : new ArrayList<>();
+    }
+
+    public void setCategories(ArrayList<Category> currentCategories) {
+        ArrayList<Category> categories = new ArrayList<>();
+        Gson gson = new Gson();
+        for (Category category : currentCategories)
+            categories.add(category);
+        String json = gson.toJson(categories);
+        editor = preferences.edit();
+        editor.putString(RECIPE_RECORDS, json);
+        editor.commit();
+        Log.d("SAVED_FILE", json);
     }
 
     public void putInt(String key, int value) {

@@ -14,6 +14,7 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -21,34 +22,55 @@ import android.widget.Toast;
 
 import com.example.cookbook.Login;
 import com.example.cookbook.R;
+import com.example.cookbook.callbacks.CategoryCallback;
+import com.example.cookbook.callbacks.RecipeCallback;
 import com.example.cookbook.fragments.CreateRecipeFragment;
-import com.example.cookbook.fragments.HomeFragment;
+import com.example.cookbook.fragments.CategoryRVFragment;
+import com.example.cookbook.fragments.RecipeFragment;
+import com.example.cookbook.fragments.RecipeRVFragment;
 import com.example.cookbook.fragments.SettingsFragment;
 import com.example.cookbook.fragments.UserFragment;
+import com.example.cookbook.models.Category;
+import com.example.cookbook.models.Recipe;
+import com.example.cookbook.models.User;
+import com.example.cookbook.utils.RecipeSP;
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.ArrayList;
+
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
+
     private DrawerLayout drawerLayout;
-    private MenuItem nav_home, nav_settings, nav_account;
     private TextView navHeader_TXT_username;
     private ImageView navHeader_IMG_userImg;
     private Toolbar toolbar;
     public static NavigationView navigationView;
     private ActionBarDrawerToggle actionBarDrawerToggle;
     private Fragment main_FRG_fragment;
+    private CategoryRVFragment categoryRVFragment;
+    private CreateRecipeFragment createRecipeFragment;
+    private RecipeRVFragment recipeRVFragment;
+    private RecipeFragment recipeFragment;
+    private UserFragment userFragment;
+    private SettingsFragment settingsFragment;
+
     private Toast toaster;
     private FirebaseAuth mAuth;
-    private FirebaseUser user;
-    private DatabaseReference mDatabase;
+    private FirebaseUser firebaseUser;
+    private FirebaseDatabase mDatabase;
+    private DatabaseReference dbRef;
+    private User user;
+    private ArrayList<Category> categories;
+    private int backPressedCounter = 0;
 
 
     @Override
@@ -56,9 +78,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mAuth = FirebaseAuth.getInstance();
-        user = mAuth.getCurrentUser();
-        mDatabase = FirebaseDatabase.getInstance().getReference();
+//        mAuth = FirebaseAuth.getInstance();
+//        user = mAuth.getCurrentUser();
+//        mDatabase = FirebaseDatabase.getInstance().getReference();
+        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        user = new User(firebaseUser.getDisplayName(), firebaseUser.getEmail(), firebaseUser.getPhoneNumber());
+        mDatabase = FirebaseDatabase.getInstance();
+        dbRef = mDatabase.getReference();
+
+//        categories = getCategories();
+//        RecipeSP.getInstance().setCategories(categories);
+
+        Log.d("User", String.valueOf(user));
 
         findViews();
         initViews();
@@ -66,7 +97,38 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         checkPermissions();
 
         if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction().replace(R.id.main_FRG_fragment, new HomeFragment()).commit();
+            categoryRVFragment = new CategoryRVFragment();
+            createRecipeFragment    = new CreateRecipeFragment();
+            recipeRVFragment = new RecipeRVFragment();
+            userFragment            = new UserFragment();
+            settingsFragment        = new SettingsFragment();
+
+            categoryRVFragment.setCallback(new CategoryCallback() {
+                @Override
+                public void categoryClicked(Category category, int position) {
+                    backPressedCounter = 0;
+                    recipeRVFragment.setCategoryRVFragment(categoryRVFragment);
+//                        recipeFragment.chosenCategory = category.getName();
+                    RecipeSP.getInstance().putString("Category", category.getName());
+                    RecipeSP.getInstance().putInt("Category_Num", position);
+                    getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.main_FRG_fragment, recipeRVFragment).commit();
+                }
+            });
+
+            recipeRVFragment.setCallback(new RecipeCallback() {
+                @Override
+                public void recipeClicked(Recipe recipe, int position) {
+                    recipeFragment.setRecipeRVFragment(recipeRVFragment);
+                    Category category = categories.get(RecipeSP.getInstance().getInt("Category_Num", 0));
+//                    RecipeSP.getInstance().putString("CURRENT_RECIPE",category.getRecipes().get(position).toString());
+                    getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.main_FRG_fragment, recipeFragment).commit();
+                }
+            });
+
+            getSupportFragmentManager().beginTransaction().replace(R.id.main_FRG_fragment, categoryRVFragment).commit();
+
             navigationView.setCheckedItem(R.id.nav_home);
         }
 
@@ -75,9 +137,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private void findViews() {
         toolbar = findViewById(R.id.main_TLBR_toolbar);
         drawerLayout = findViewById(R.id.main_DRWR_loggedIn);
-        nav_home = findViewById(R.id.nav_home);
-        nav_account = findViewById(R.id.nav_account);
-        nav_settings = findViewById(R.id.nav_settings);
         navHeader_TXT_username = findViewById(R.id.navHeader_TXT_username);
         navHeader_IMG_userImg = findViewById(R.id.navHeader_IMG_userImg);
         navigationView = findViewById(R.id.main_NAVVW_NavDrawer);
@@ -86,13 +145,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private void initViews() {
         initDrawerMenu();
         setDrawer();
-
     }
 
     private void setDrawer() {
-        String username = user.getDisplayName();
-//        if(username != null)
-//            navHeader_TXT_username.setText(username);
+        String name = user.getName();
+//        if(name != null)
+//            navHeader_TXT_username.setText(name);
     }
 
     private void initDrawerMenu() {
@@ -130,22 +188,26 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        backPressedCounter = 0;
         switch (item.getItemId()) {
             case R.id.nav_home:
-                getSupportFragmentManager().beginTransaction().replace(R.id.main_FRG_fragment, new HomeFragment()).commit();
+
+                getSupportFragmentManager().beginTransaction().replace(R.id.main_FRG_fragment, categoryRVFragment).commit();
                 break;
 
             case R.id.nav_addRecipe:
-
-                getSupportFragmentManager().beginTransaction().replace(R.id.main_FRG_fragment, new CreateRecipeFragment()).commit();
+                createRecipeFragment.setCategoryRVFragment(categoryRVFragment);
+                getSupportFragmentManager().beginTransaction().replace(R.id.main_FRG_fragment, createRecipeFragment).commit();
                 break;
 
             case R.id.nav_account:
-                getSupportFragmentManager().beginTransaction().replace(R.id.main_FRG_fragment, new UserFragment()).commit();
+                userFragment.setCategoryRVFragment(categoryRVFragment);
+                getSupportFragmentManager().beginTransaction().replace(R.id.main_FRG_fragment, userFragment).commit();
                 break;
 
             case R.id.nav_settings:
-                getSupportFragmentManager().beginTransaction().replace(R.id.main_FRG_fragment, new SettingsFragment()).commit();
+                settingsFragment.setCategoryRVFragment(categoryRVFragment);
+                getSupportFragmentManager().beginTransaction().replace(R.id.main_FRG_fragment, settingsFragment).commit();
                 break;
 
             case R.id.nav_logout:
@@ -164,7 +226,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     ////////////////////////END DRAWER FUNCTIONS////////////////////////
 
 
-
     private void checkPermissions() {
         if (ContextCompat.checkSelfPermission(this,
                 android.Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
@@ -173,18 +234,56 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
+    private ArrayList<Category> getCategories() {
+        if (categories == null)
+            categories = new ArrayList<>();
+        dbRef.child("Category").get().addOnCompleteListener(task -> {
+            if (!task.isSuccessful()) {
+                Log.e("firebase", "Error getting data", task.getException());
+            } else {
+                //                    categories = (ArrayList) task.getResult().getValue();
+                Log.d("firebase", String.valueOf(task.getResult().getKey()));
+                for (DataSnapshot dataSnapshot : task.getResult().getChildren()) {
+                    String name = String.valueOf(dataSnapshot.child("Name").getValue());
+                    String image = String.valueOf(dataSnapshot.child("Image").getValue());
+                    String menuId = String.valueOf(dataSnapshot.getKey());
+
+//                    ArrayList<Recipe> recipes = (ArrayList<Recipe>) dataSnapshot.child("Recipes").getValue();
+                    //                        String menuId = String.valueOf(dataSnapshot.getKey());
+                    Log.d("name", name);
+                    Log.d("image", image);
+                    Category category = new Category(name, image, menuId);
+                    categories.add(category);
+//                    categoryAdapter.notifyItemInserted(categories.size());
+                    Log.d("counted", String.valueOf(categories.size()));
+                }
+            }
+        });
+        return categories;
+    }
+
     @Override
     public void onBackPressed() {
         if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
             drawerLayout.closeDrawer(GravityCompat.START);
-        } else if (CreateRecipeFragment.onBackPressedCallback != null){
+        }
+        else if (CreateRecipeFragment.onBackPressedCallback != null) {
             CreateRecipeFragment.onBackPressedCallback.onBackPressed();
-        } else if (UserFragment.onBackPressedCallback != null){
+        }
+        else if (RecipeRVFragment.onBackPressedCallback != null) {
+            RecipeRVFragment.onBackPressedCallback.onBackPressed();
+        }
+        else if (UserFragment.onBackPressedCallback != null) {
             UserFragment.onBackPressedCallback.onBackPressed();
-        } else if (SettingsFragment.onBackPressedCallback != null){
+        }
+        else if (SettingsFragment.onBackPressedCallback != null) {
             SettingsFragment.onBackPressedCallback.onBackPressed();
-        } else {
-            super.onBackPressed();
+        }
+        else {
+            backPressedCounter++;
+            if(backPressedCounter == 2) {
+                super.onBackPressed();
+            }
         }
     }
 
@@ -203,4 +302,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         finish();
     }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        RecipeSP.getInstance().setCategories(new ArrayList<Category>());
+    }
 }
