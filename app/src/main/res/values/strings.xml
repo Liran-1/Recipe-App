@@ -32,4 +32,10 @@
     <string name="settings">Settings</string>
     <string name="logout">Logout</string>
     <string name="description">Description</string>
+
+
+    <string name="Units">Units</string>
+    <string name="name">Name</string>
+    <string name="instructions">Instructions</string>
+    <string name="add_recipe">Add Recipe</string>
 </resources>

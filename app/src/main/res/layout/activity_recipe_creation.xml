@@ -5,12 +5,26 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".RecipeCreationActivity">
+    tools:context=".activities.RecipeCreationActivity">
 
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="5">
+        android:layout_weight="2">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/recipeCreation_ETXT_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/name"
+            android:lines="1" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="4">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/recipeCreation_ETXT_description"
@@ -21,23 +35,22 @@
 
     </com.google.android.material.textfield.TextInputLayout>
 
-
     <ImageView
         android:id="@+id/recipeCreation_IMG_picture"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="10" />
+        android:layout_weight="6"
+        android:scaleType="fitCenter" />
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
+        android:layout_height="0dp"
+        android:layout_weight="3"
         android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="2"
+            android:layout_height="wrap_content"
             android:orientation="horizontal">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -45,7 +58,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_margin="4dp"
-                android:layout_weight="3"
+                android:layout_weight="4"
                 android:hint="Amount"
                 android:inputType="numberDecimal" />
 
@@ -62,12 +75,12 @@
                 android:id="@+id/ingredient_SPNR_ingredientUnit"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="4"
+                android:layout_weight="5"
                 android:entries="@array/Amounts"
                 android:gravity="end" />
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/ingredient_BTN_add"
+                android:id="@+id/ingredient_BTN_addIngredient"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_margin="4dp"
@@ -88,23 +101,36 @@
         android:id="@+id/recipeCreation_FRAME_list"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="10"
+        android:layout_weight="12"
         android:background="@color/purple_500"
         android:padding="20dp" />
-
 
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="10">
+        android:layout_weight="12">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/recipeCreation_ETXT_instructions"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Instructions" />
+            android:hint="@string/instructions"
+            android:lines="7" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
+    <Spinner
+        android:id="@+id/recipeCreation_SPNR_categories"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_gravity="center"
+        android:layout_weight="2" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/recipeCreation_BTN_addRecipe"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="@string/add_recipe" />
 
 </LinearLayout>

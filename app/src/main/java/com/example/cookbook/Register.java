@@ -9,6 +9,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.cookbook.activities.MainActivity;
 import com.example.cookbook.models.User;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
@@ -144,10 +145,10 @@ public class Register extends AppCompatActivity {
         return false;
     }
 
-    public void writeNewUser(String userId, String name, String email, String phoneNumber,String password) {
-        User user = new User(name, email, phoneNumber, password);
-
-        mDatabase.child("User").child(user.getUserId()).setValue(user);
-    }
+//    public void writeNewUser(String userId, String name, String email, String phoneNumber,String password) {
+//        User user = new User(name, email, phoneNumber, password);
+//
+//        mDatabase.child("User").child(user.getUserId()).setValue(user);
+//    }
 
 }

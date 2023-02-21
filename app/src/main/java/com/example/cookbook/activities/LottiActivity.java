@@ -1,8 +1,10 @@
-package com.example.cookbook;
+package com.example.cookbook.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+
+import com.example.cookbook.R;
 
 public class LottiActivity extends AppCompatActivity {
 

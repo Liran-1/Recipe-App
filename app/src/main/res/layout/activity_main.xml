@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/food_background"
     android:orientation="vertical"
-    tools:context=".MainActivity">
+    tools:context=".activities.MainActivity">
 
     <androidx.drawerlayout.widget.DrawerLayout
         android:id="@+id/main_DRWR_loggedIn"

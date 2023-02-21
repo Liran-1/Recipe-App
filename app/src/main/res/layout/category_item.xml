@@ -9,61 +9,57 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="8dp"
-    >
-    <com.google.android.material.imageview.ShapeableImageView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="centerCrop"
-        android:background="@drawable/bread"
-        />
+        android:layout_marginBottom="8dp">
 
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/category_TXT_name"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textColor="@color/white"
-        android:background="@color/cardview_dark_background"
-        android:textSize="20sp"
-        android:text="Category name"
-        android:gravity="center"
-        android:layout_alignParentBottom="true"
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/category_IMG_category"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/bread"
+            android:scaleType="centerCrop" />
 
-        />
-
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/category_TXT_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:background="@color/cardview_dark_background"
+            android:gravity="center"
+            android:text="Category name"
+            android:textColor="@color/white"
+            android:textSize="20sp" />
 
 
     </RelativeLayout>
 
 
+    <!--    <FrameLayout-->
+    <!--        android:id="@+id/idFrame"-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:layout_gravity="center">-->
 
-<!--    <FrameLayout-->
-<!--        android:id="@+id/idFrame"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_gravity="center">-->
+    <!--        &lt;!&ndash;on below line we are creating an image button&ndash;&gt;-->
+    <!--        <ImageButton-->
+    <!--            android:id="@+id/idImgBtn"-->
+    <!--            android:layout_width="wrap_content"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:background="@color/purple_200"-->
+    <!--            android:padding="10dp"-->
+    <!--            android:src="@drawable/ic_launcher_foreground" />-->
 
-<!--        &lt;!&ndash;on below line we are creating an image button&ndash;&gt;-->
-<!--        <ImageButton-->
-<!--            android:id="@+id/idImgBtn"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:background="@color/purple_200"-->
-<!--            android:padding="10dp"-->
-<!--            android:src="@drawable/ic_launcher_foreground" />-->
-
-<!--        &lt;!&ndash;on below line we are creating a-->
-<!--     text for our image button&ndash;&gt;-->
-<!--        <TextView-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_gravity="center"-->
-<!--            android:layout_marginTop="45dp"-->
-<!--            android:clickable="true"-->
-<!--            android:text="Pasta"-->
-<!--            android:textColor="@color/white"-->
-<!--            android:textStyle="bold" />-->
-<!--    </FrameLayout>-->
+    <!--        &lt;!&ndash;on below line we are creating a-->
+    <!--     text for our image button&ndash;&gt;-->
+    <!--        <TextView-->
+    <!--            android:layout_width="wrap_content"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:layout_gravity="center"-->
+    <!--            android:layout_marginTop="45dp"-->
+    <!--            android:clickable="true"-->
+    <!--            android:text="Pasta"-->
+    <!--            android:textColor="@color/white"-->
+    <!--            android:textStyle="bold" />-->
+    <!--    </FrameLayout>-->
 
     <!--    <androidx.appcompat.widget.AppCompatImageButton-->
     <!--        android:layout_width="match_parent"-->

@@ -1,20 +1,27 @@
-package com.example.cookbook;
+package com.example.cookbook.activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.cookbook.Login;
+import com.example.cookbook.R;
+import com.example.cookbook.fragments.CreateRecipeFragment;
 import com.example.cookbook.fragments.HomeFragment;
 import com.example.cookbook.fragments.SettingsFragment;
 import com.example.cookbook.fragments.UserFragment;
@@ -22,7 +29,6 @@ import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -32,21 +38,17 @@ import com.google.firebase.database.FirebaseDatabase;
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private DrawerLayout drawerLayout;
-    private MenuItem nav_home;
-    private MenuItem nav_settings;
-    private MenuItem nav_account;
+    private MenuItem nav_home, nav_settings, nav_account;
     private TextView navHeader_TXT_username;
     private ImageView navHeader_IMG_userImg;
-    private ExtendedFloatingActionButton main_FAB_addRecipe;
     private Toolbar toolbar;
-    private NavigationView navigationView;
+    public static NavigationView navigationView;
     private ActionBarDrawerToggle actionBarDrawerToggle;
     private Fragment main_FRG_fragment;
     private Toast toaster;
     private FirebaseAuth mAuth;
     private FirebaseUser user;
     private DatabaseReference mDatabase;
-
 
 
     @Override
@@ -56,9 +58,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         mAuth = FirebaseAuth.getInstance();
         user = mAuth.getCurrentUser();
+        mDatabase = FirebaseDatabase.getInstance().getReference();
 
         findViews();
         initViews();
+
+        checkPermissions();
 
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction().replace(R.id.main_FRG_fragment, new HomeFragment()).commit();
@@ -76,23 +81,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         navHeader_TXT_username = findViewById(R.id.navHeader_TXT_username);
         navHeader_IMG_userImg = findViewById(R.id.navHeader_IMG_userImg);
         navigationView = findViewById(R.id.main_NAVVW_NavDrawer);
-        main_FAB_addRecipe = findViewById(R.id.main_FAB_addRecipe);
     }
 
     private void initViews() {
-        mDatabase = FirebaseDatabase.getInstance().getReference();
-
-        main_FAB_addRecipe.setOnClickListener(view -> addNewRecipe());
-
         initDrawerMenu();
         setDrawer();
 
-    }
-
-    private void addNewRecipe() {
-        Intent intent = new Intent(MainActivity.this, RecipeCreationActivity.class);
-        startActivity(intent);
-        finish();
     }
 
     private void setDrawer() {
@@ -141,6 +135,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 getSupportFragmentManager().beginTransaction().replace(R.id.main_FRG_fragment, new HomeFragment()).commit();
                 break;
 
+            case R.id.nav_addRecipe:
+
+                getSupportFragmentManager().beginTransaction().replace(R.id.main_FRG_fragment, new CreateRecipeFragment()).commit();
+                break;
+
             case R.id.nav_account:
                 getSupportFragmentManager().beginTransaction().replace(R.id.main_FRG_fragment, new UserFragment()).commit();
                 break;
@@ -164,10 +163,26 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     ////////////////////////END DRAWER FUNCTIONS////////////////////////
 
+
+
+    private void checkPermissions() {
+        if (ContextCompat.checkSelfPermission(this,
+                android.Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.CAMERA}, 101);
+        }
+    }
+
     @Override
     public void onBackPressed() {
         if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
             drawerLayout.closeDrawer(GravityCompat.START);
+        } else if (CreateRecipeFragment.onBackPressedCallback != null){
+            CreateRecipeFragment.onBackPressedCallback.onBackPressed();
+        } else if (UserFragment.onBackPressedCallback != null){
+            UserFragment.onBackPressedCallback.onBackPressed();
+        } else if (SettingsFragment.onBackPressedCallback != null){
+            SettingsFragment.onBackPressedCallback.onBackPressed();
         } else {
             super.onBackPressed();
         }
@@ -178,9 +193,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 .signOut(this)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     public void onComplete(@NonNull Task<Void> task) {
-                                    toaster = Toast.makeText(MainActivity.this,
-                                            "Logged out", Toast.LENGTH_SHORT);
-                                    toaster.show();
+                        toaster = Toast.makeText(MainActivity.this,
+                                "Logged out", Toast.LENGTH_SHORT);
+                        toaster.show();
                     }
                 });
         Intent intent = new Intent(MainActivity.this, Login.class);

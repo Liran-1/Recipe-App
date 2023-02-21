@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    tools:context=".activities.RecipeCreationActivity">
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="58dp">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/recipeCreation_ETXT_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/name"
+            android:lines="1" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="62dp">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/recipeCreation_ETXT_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/description"
+            android:lines="2" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <ImageView
+        android:background="@color/white"
+        android:id="@+id/recipeCreation_IMG_picture"
+        android:layout_width="match_parent"
+        android:layout_height="160dp"
+        android:src="@drawable/open_camera"
+        android:scaleType="fitCenter" />
+
+    <LinearLayout
+        android:background="@color/white"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/ingredient_ETXT_ingredientAmount"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="4dp"
+            android:layout_weight="4"
+            android:background="@color/white"
+            android:hint="Amount"
+            android:inputType="numberDecimal" />
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/ingredient_ETXT_ingredientName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="4dp"
+            android:layout_weight="6"
+            android:background="@color/white"
+            android:hint="Ingredient(s)"
+            android:maxLines="2" />
+
+        <Spinner
+            android:id="@+id/ingredient_SPNR_ingredientUnit"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="5"
+            android:entries="@array/Amounts"
+            android:background="@color/white"
+            android:gravity="end" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/ingredient_BTN_addIngredient"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="4dp"
+            android:layout_weight="2"
+            android:minWidth="0dp"
+            android:minHeight="0dp"
+            android:text="+"
+
+            android:textAllCaps="false" />
+
+    </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recipeCreation_RV_ingredients"
+        android:layout_width="wrap_content"
+        android:layout_height="120dp"
+        tools:listitem="@layout/ingredient_item" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="160dp">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/recipeCreation_ETXT_instructions"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/instructions"
+                android:lines="7" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+<!--    <com.google.android.material.textfield.TextInputLayout-->
+<!--        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginTop="8dp"-->
+<!--        android:hint="@string/instructions">-->
+
+<!--        <com.google.android.material.textfield.TextInputEditText-->
+<!--            android:id="@+id/Appointment_ET_Notes"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:gravity="top"-->
+<!--            android:inputType="textMultiLine"-->
+<!--            android:lines="4" />-->
+<!--    </com.google.android.material.textfield.TextInputLayout>-->
+
+
+
+    <Spinner
+        android:id="@+id/recipeCreation_SPNR_categories"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        android:layout_gravity="center" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/recipeCreation_BTN_addRecipe"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="@string/add_recipe" />
+
+
+</LinearLayout>

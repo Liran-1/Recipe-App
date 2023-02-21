@@ -35,7 +35,7 @@ public class RecipeSP {
         return instance;
     }
 
-    public ArrayList<Ingredient> getHighScores() {
+    public ArrayList<Ingredient> getIngredients() {
         TypeToken<List<Ingredient>> listType = new TypeToken<List<Ingredient>>() {};
         Gson gson = new Gson();
         String recipeData = preferences.getString(RECIPE_RECORDS, "");
@@ -44,21 +44,12 @@ public class RecipeSP {
         return Ingredients != null ? Ingredients : new ArrayList<>();
     }
 
-    public void setIngredient(ArrayList<Ingredient> Ingredients) {
-        ArrayList<Ingredient> highScores = new ArrayList<>();
+    public void setIngredients(ArrayList<Ingredient> currentIngredients) {
+        ArrayList<Ingredient> ingredients = new ArrayList<>();
         Gson gson = new Gson();
-        int counter = 0;
-        if (Ingredients.size() > HIGH_SCORE_LIST_SIZE)
-            for (Ingredient user:Ingredients) {
-                if(counter < HIGH_SCORE_LIST_SIZE)
-                    highScores.add(user);
-                else break;
-                counter++;
-            }
-        else
-            for (Ingredient ingredient:Ingredients)
-                highScores.add(ingredient);
-        String json = gson.toJson(highScores);
+        for (Ingredient ingredient : currentIngredients)
+            ingredients.add(ingredient);
+        String json = gson.toJson(ingredients);
         editor = preferences.edit();
         editor.putString(RECIPE_RECORDS, json);
         editor.commit();

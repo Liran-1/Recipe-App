@@ -1,28 +1,20 @@
 package com.example.cookbook.models;
 
+import java.util.ArrayList;
+
 public class User {
 
-    private static int user_count = 1;
-    private int userID;
     private String username, email, phoneNumber, password;
+    private ArrayList<Recipe> recipeArrayList;
 
     public User() {
     }
 
     public User(String username, String email, String phoneNumber, String password) {
-        setUserId();
         this.username = username;
         this.email = email;
         this.phoneNumber = phoneNumber;
         this.password = password;
-    }
-
-    public String getUserId() {
-        return String.valueOf(userID);
-    }
-
-    private void setUserId() {
-        userID = ++user_count;
     }
 
     public String getUsername() {
