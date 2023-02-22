@@ -14,6 +14,7 @@
         <item>tsp</item>
         <item>tbsp</item>
         <item>cups</item>
+        <item>pc.</item>
     </string-array>
     <string-array name="Categories">
         <item>Category</item>

@@ -40,7 +40,6 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -97,11 +96,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         checkPermissions();
 
         if (savedInstanceState == null) {
-            categoryRVFragment = new CategoryRVFragment();
+            categoryRVFragment      = new CategoryRVFragment();
             createRecipeFragment    = new CreateRecipeFragment();
-            recipeRVFragment = new RecipeRVFragment();
+            recipeRVFragment        = new RecipeRVFragment();
             userFragment            = new UserFragment();
             settingsFragment        = new SettingsFragment();
+            recipeFragment          = new RecipeFragment();
 
             categoryRVFragment.setCallback(new CategoryCallback() {
                 @Override
@@ -109,8 +109,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     backPressedCounter = 0;
                     recipeRVFragment.setCategoryRVFragment(categoryRVFragment);
 //                        recipeFragment.chosenCategory = category.getName();
-                    RecipeSP.getInstance().putString("Category", category.getName());
-                    RecipeSP.getInstance().putInt("Category_Num", position);
+                    Log.d("ChosenCat", category.getName());
+                    RecipeSP.getInstance().putString(RecipeSP.CATEGORY_CHOSEN, category.getName());
+                    RecipeSP.getInstance().putInt(RecipeSP.CATEGORY_CHOSEN_NUM, position + 1);
+
                     getSupportFragmentManager().beginTransaction()
                             .replace(R.id.main_FRG_fragment, recipeRVFragment).commit();
                 }
@@ -120,8 +122,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 @Override
                 public void recipeClicked(Recipe recipe, int position) {
                     recipeFragment.setRecipeRVFragment(recipeRVFragment);
-                    Category category = categories.get(RecipeSP.getInstance().getInt("Category_Num", 0));
-//                    RecipeSP.getInstance().putString("CURRENT_RECIPE",category.getRecipes().get(position).toString());
+                    RecipeSP.getInstance().putString(RecipeSP.RECIPE_CHOSEN, recipe.getName());
+                    RecipeSP.getInstance().putInt(RecipeSP.CHOSEN_RECIPE_NUM, position);
                     getSupportFragmentManager().beginTransaction()
                             .replace(R.id.main_FRG_fragment, recipeFragment).commit();
                 }
@@ -234,33 +236,33 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
-    private ArrayList<Category> getCategories() {
-        if (categories == null)
-            categories = new ArrayList<>();
-        dbRef.child("Category").get().addOnCompleteListener(task -> {
-            if (!task.isSuccessful()) {
-                Log.e("firebase", "Error getting data", task.getException());
-            } else {
-                //                    categories = (ArrayList) task.getResult().getValue();
-                Log.d("firebase", String.valueOf(task.getResult().getKey()));
-                for (DataSnapshot dataSnapshot : task.getResult().getChildren()) {
-                    String name = String.valueOf(dataSnapshot.child("Name").getValue());
-                    String image = String.valueOf(dataSnapshot.child("Image").getValue());
-                    String menuId = String.valueOf(dataSnapshot.getKey());
-
-//                    ArrayList<Recipe> recipes = (ArrayList<Recipe>) dataSnapshot.child("Recipes").getValue();
-                    //                        String menuId = String.valueOf(dataSnapshot.getKey());
-                    Log.d("name", name);
-                    Log.d("image", image);
-                    Category category = new Category(name, image, menuId);
-                    categories.add(category);
-//                    categoryAdapter.notifyItemInserted(categories.size());
-                    Log.d("counted", String.valueOf(categories.size()));
-                }
-            }
-        });
-        return categories;
-    }
+//    private ArrayList<Category> getCategories() {
+//        if (categories == null)
+//            categories = new ArrayList<>();
+//        dbRef.child("Category").get().addOnCompleteListener(task -> {
+//            if (!task.isSuccessful()) {
+//                Log.e("firebase", "Error getting data", task.getException());
+//            } else {
+//                //                    categories = (ArrayList) task.getResult().getValue();
+//                Log.d("firebase", String.valueOf(task.getResult().getKey()));
+//                for (DataSnapshot dataSnapshot : task.getResult().getChildren()) {
+//                    String name = String.valueOf(dataSnapshot.child("Name").getValue());
+//                    String image = String.valueOf(dataSnapshot.child("Image").getValue());
+//                    String menuId = String.valueOf(dataSnapshot.getKey());
+//
+////                    ArrayList<Recipe> recipes = (ArrayList<Recipe>) dataSnapshot.child("Recipes").getValue();
+//                    //                        String menuId = String.valueOf(dataSnapshot.getKey());
+//                    Log.d("name", name);
+//                    Log.d("image", image);
+//                    Category category = new Category(name, image, menuId);
+//                    categories.add(category);
+////                    categoryAdapter.notifyItemInserted(categories.size());
+//                    Log.d("counted", String.valueOf(categories.size()));
+//                }
+//            }
+//        });
+//        return categories;
+//    }
 
     @Override
     public void onBackPressed() {
@@ -272,6 +274,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
         else if (RecipeRVFragment.onBackPressedCallback != null) {
             RecipeRVFragment.onBackPressedCallback.onBackPressed();
+        }
+        else if (RecipeFragment.onBackPressedCallback != null) {
+            RecipeFragment.onBackPressedCallback.onBackPressed();
         }
         else if (UserFragment.onBackPressedCallback != null) {
             UserFragment.onBackPressedCallback.onBackPressed();
@@ -305,6 +310,5 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onStop() {
         super.onStop();
-        RecipeSP.getInstance().setCategories(new ArrayList<Category>());
     }
 }

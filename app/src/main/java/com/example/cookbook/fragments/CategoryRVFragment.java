@@ -44,23 +44,17 @@ public class CategoryRVFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_home, container, false);
-//        categoryAdapter = new CategoryAdapter(getContext(), categories);
 
-//        Category category = new Category("test", "https://pixabay.com/photos/fruit-apple-tangerine-healthy-deco-1987195/");
-
-        categories = getCategories();
-//        categories.add(category);
+        getCategoriesFromDB();
 
         findViews(view);
 
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                initViews();
-            }
-        }, 1000);
-
-        Log.d("categories", String.valueOf(categories));
+//        handler.postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                initViews();
+//            }
+//        }, 2000);
 
         initViews();
 
@@ -76,46 +70,63 @@ public class CategoryRVFragment extends Fragment {
         home_RV_categories.setHasFixedSize(true);
         home_RV_categories.setLayoutManager(new LinearLayoutManager(getContext()));
 
-//        Query baseQuery = mDatabase.getReference().child("Category").child("Category");
+//        Query baseQuery = mDatabase.getReference().child("Category").;
 //        PagingConfig config = new PagingConfig(/* page size */ 20, /* prefetchDistance */ 10,
 //                /* enablePlaceHolders */ false);
 //
 //        /////Firebase RecyclerView//////
-//        DatabasePagingOptions<Category> options
-//                = new DatabasePagingOptions.Builder<Category>()
-//                .setQuery(baseQuery, config , Category.class)
+//        Query query = FirebaseDatabase.getInstance()
+//                .getReference()
+//                .child("Category");
+//        FirebaseRecyclerOptions<Category> options
+//                = new FirebaseRecyclerOptions.Builder<Category>()
+//                .setQuery(query, Category.class)
 //                .build();
 
 //        fbCategoryAdapter = new FBCategoryAdapter(options);
 //        home_RV_categories.setAdapter(fbCategoryAdapter);
-        home_RV_categories.setAdapter(categoryAdapter);
-        categoryAdapter.setCategoryCallback(categoryCallback);
+
     }
 
-    private ArrayList<Category> getCategories() {
+
+    private void loadData() {
+//        FirebaseRecyclerAdapter<Category,CategoryAdapter.CategoryViewHolder> firebaseRecyclerAdapter =
+//                new FirebaseRecyclerAdapter<Category, CategoryAdapter.CategoryViewHolder>() {
+//                    @Override
+//                    protected void onBindViewHolder(@NonNull CategoryAdapter.CategoryViewHolder holder, int position, @NonNull Category model) {
+//
+//                    }
+//
+//                    @NonNull
+//                    @Override
+//                    public CategoryAdapter.CategoryViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+//                        return null;
+//                    }
+//                };
+    }
+
+
+    private void getCategoriesFromDB() {
         categories = new ArrayList<>();
         dbRef.child("Category").get().addOnCompleteListener(task -> {
-                    if (!task.isSuccessful()) {
-                        Log.e("firebase", "Error getting data", task.getException());
-                    }
-                    else {
-    //                    categories = (ArrayList) task.getResult().getValue();
-                        Log.d("firebase", String.valueOf(task.getResult().getKey()));
-                        for(DataSnapshot dataSnapshot: task.getResult().getChildren()){
-                            String name = String.valueOf(dataSnapshot.child("Name").getValue());
-                            String image = String.valueOf(dataSnapshot.child("Image").getValue());
-                            String menuId = String.valueOf(dataSnapshot.getKey());
-                            Log.d("name", name);
-                            Log.d("image", image);
-                            Category category = new Category(name, image, menuId);
-                            categories.add(category);
-                            categoryAdapter.notifyItemInserted(categories.size());
-                            Log.d("counted", String.valueOf(categories.size()));
-                        }
-                    }
-                });
+            if (!task.isSuccessful()) {
+                Log.e("firebase", "Error getting data", task.getException());
+            } else {
+//                        categories = (ArrayList) task.getResult().getValue();
+                Log.d("firebase", String.valueOf(task.getResult().getKey()));
+                for (DataSnapshot dataSnapshot : task.getResult().getChildren()) {
+                    String name = String.valueOf(dataSnapshot.child("Name").getValue());
+                    String image = String.valueOf(dataSnapshot.child("Image").getValue());
+                    String menuId = String.valueOf(dataSnapshot.getKey());
+                    Category category = new Category(name, image, menuId);
+                    categories.add(category);
+//                    categoryAdapter.notifyItemInserted(categories.size());
+                }
 
-        return categories;
+                home_RV_categories.setAdapter(categoryAdapter);
+                categoryAdapter.setCategoryCallback(categoryCallback);
+            }
+        });
     }
 
 

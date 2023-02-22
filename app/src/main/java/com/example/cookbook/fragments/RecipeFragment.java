@@ -31,7 +31,7 @@ public class RecipeFragment extends Fragment implements OnBackPressedCallback {
 
     @Override
     public void onBackPressed() {
-        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.main_FRG_fragment, new CategoryRVFragment()).commit();
+        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.main_FRG_fragment, recipeRVFragment).commit();
         navigationView.setCheckedItem(R.id.nav_home);
     }
 

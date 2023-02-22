@@ -72,4 +72,17 @@ public class Recipe {
     public int getLikes() {
         return 0;
     }
+
+    @Override
+    public String toString() {
+        return "Recipe{" +
+                "name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", image='" + image + '\'' +
+                ", instructions='" + instructions + '\'' +
+                ", categoryId='" + categoryId + '\'' +
+                ", likes=" + likes +
+                ", ingredients=" + ingredients +
+                '}';
+    }
 }

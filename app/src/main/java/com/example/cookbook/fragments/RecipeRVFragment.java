@@ -29,7 +29,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.GenericTypeIndicator;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -42,7 +41,8 @@ public class RecipeRVFragment extends Fragment implements OnBackPressedCallback 
     //    private ShapeableImageView recipe_IMG_favorite;
     private CategoryRVFragment categoryRVFragment;                  // for return
     private RecyclerView home_RV_recipes;
-    private String categoryChosen = RecipeSP.getInstance().getString("Category", "Lunch");
+    private int categoryChosenNum;
+    private String categoryChosenNumParsed;
     private ArrayList<Recipe> recipes;
     private RecipeAdapter recipeAdapter;
     public static OnBackPressedCallback onBackPressedCallback;
@@ -53,7 +53,11 @@ public class RecipeRVFragment extends Fragment implements OnBackPressedCallback 
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.recyclerview_recipe, container, false);
 
-        getRecipes();
+//        Log.d("CatChosen", RecipeSP.getInstance().getString(RecipeSP.CHOSEN_CATEGORY, "Lunch"));
+        categoryChosenNum = RecipeSP.getInstance().getInt(RecipeSP.CATEGORY_CHOSEN_NUM, 0);
+        categoryChosenNumParsed = categoryChosenNum < 10 ? "0" + categoryChosenNum : String.valueOf(categoryChosenNum);
+
+        getRecipesFromDB();
 
         findViews(view);
         initViews();
@@ -62,98 +66,99 @@ public class RecipeRVFragment extends Fragment implements OnBackPressedCallback 
     }
 
     private void findViews(View view) {
-//        recipe_IMG_favorite = view.findViewById(R.id.recipe_IMG_favorite);
         home_RV_recipes = view.findViewById(R.id.home_RV_recipes);
     }
 
     private void initViews() {
-        recipeAdapter = new RecipeAdapter(getContext(), recipes);
-        home_RV_recipes.setHasFixedSize(true);
-        home_RV_recipes.setLayoutManager(new LinearLayoutManager(getContext()));
-        home_RV_recipes.setAdapter(recipeAdapter);
-
-//        recipeAdapter.setOnFavoriteClicked(new RecipeAdapter.FavoriteClicked() {
+        //        recipeAdapter.setOnFavoriteClicked(new RecipeAdapter.FavoriteClicked() {
 //            @Override
 //            public void onFavoriteClicked(int position) {
 //                user.changeFavorite(home_RV_recipes.getAdapter().getItemId(position));
 //                home_RV_recipes.getAdapter().notifyItemChanged(position);
 //            }
 //        });
-        recipeAdapter.setRecipeCallback(recipeCallback);
+
+        recipeAdapter = new RecipeAdapter(getContext(), recipes);
+        home_RV_recipes.setHasFixedSize(true);
+        home_RV_recipes.setLayoutManager(new LinearLayoutManager(getContext()));
+//        home_RV_recipes.setAdapter(recipeAdapter);
+//        recipeAdapter.setRecipeCallback(recipeCallback);
     }
 
-//    private void changeFavoriteState() {
-//        if()
-//    }
 
-    private ArrayList<Recipe> getRecipes() {
-        dbRef.child("Category").child(categoryChosen).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DataSnapshot> task) {
-                if (!task.isSuccessful()) {
-                    Log.e("firebase", "Error getting data", task.getException());
-                } else {
-                    recipes = (ArrayList) task.getResult().getValue();
-                    Log.d("firebase", String.valueOf(task.getResult().getValue()));
+    private ArrayList<Recipe> getRecipesFromDB() {
+        recipes = new ArrayList<>();
+        dbRef.child("Category").child(categoryChosenNumParsed).child("Recipes").get().addOnCompleteListener(task -> {
+            if (!task.isSuccessful()) {
+                Log.e("firebase", "Error getting data", task.getException());
+            } else {
+                Log.d("firebase", String.valueOf(task.getResult().getValue()));
+                Log.d("firebase", String.valueOf(task.getResult().getChildren()));
 
-                    for (DataSnapshot dataSnapshot : task.getResult().getChildren()) {
+//                DataSnapshot dataSnapshot = task.getResult().child("Recipes");
+                for (DataSnapshot dataSnapshot : task.getResult().getChildren()) {
+                    Log.d("resultsIs", String.valueOf(dataSnapshot.getValue()));
+                    Log.d("resultsIs", String.valueOf(dataSnapshot.getKey()));
+                    String name = String.valueOf(dataSnapshot.child("name").getValue());
+                    String description = String.valueOf(dataSnapshot.child("description").getValue());
+                    String image = String.valueOf(dataSnapshot.child("image").getValue());
+                    String instructions = String.valueOf(dataSnapshot.child("instructions").getValue());
+                    String categoryId = categoryChosenNumParsed;
 
-                        String name = String.valueOf(dataSnapshot.child("Name").getValue());
-                        String description = String.valueOf(dataSnapshot.child("Description").getValue());
-                        String image = String.valueOf(dataSnapshot.child("Image").getValue());
-                        String instructions = String.valueOf(dataSnapshot.child("Instructions").getValue());
-                        String categoryId = String.valueOf(dataSnapshot.child("CategoryId").getValue());
-                        GenericTypeIndicator<Map<String, Ingredient>> genericTypeIndicator = new GenericTypeIndicator<Map<String, Ingredient>>() {
-                        };
-                        Map<String, Ingredient> ingredientsMap = dataSnapshot.child("Ingredients")
-                                .getValue(genericTypeIndicator);
+                    GenericTypeIndicator<Map<String, Ingredient>> genericTypeIndicator =
+                            new GenericTypeIndicator<Map<String, Ingredient>>() {
+                            };
+                    Map<String, Ingredient> ingredientsMap = dataSnapshot.child("ingredients")
+                            .getValue(genericTypeIndicator);
 
-                        ArrayList<Ingredient> ingredients = new ArrayList<>();
-                        if (ingredientsMap != null)
+                    ArrayList<Ingredient> ingredients = new ArrayList<>();
+                    if (ingredientsMap != null) {
 //                        ingredients = ingredientsMap.values();
-                            ingredients = new ArrayList<>(ingredientsMap.values());
-//                    int likes = (int) dataSnapshot.child("Image").getValue();
-                        int likes = 0;
-                        //                        String menuId = String.valueOf(dataSnapshot.getKey());
-                        Log.d("name", name);
-                        Log.d("image", image);
-                        Recipe recipe = new Recipe(name, description, image, instructions, categoryId, likes, ingredients);
-                        recipes.add(recipe);
-
-//                    Log.d("counted", String.valueOf(categories.size()));
-
+                        ingredients = new ArrayList<>(ingredientsMap.values());
                     }
+//                    int likes = (int) dataSnapshot.child("Image").getValue();
+                    int likes = 0;
+                    //                        String menuId = String.valueOf(dataSnapshot.getKey());
+//                        Log.d("name", name);
+//                        Log.d("image", image);
+
+                    Recipe recipe = new Recipe(name, description, image, instructions, categoryId, likes, ingredients);
+                    Log.d("recipes", String.valueOf(recipe));
+                    recipes.add(recipe);
+
                 }
-            };
+                home_RV_recipes.setAdapter(recipeAdapter);
+                recipeAdapter.setRecipeCallback(recipeCallback);
+            }
         });
-                return recipes;
+        return recipes;
     }
 
-        public void setCategoryRVFragment (CategoryRVFragment categoryRVFragment){
-            this.categoryRVFragment = categoryRVFragment;
-        }
-
-        @Override
-        public void onBackPressed () {
-            getActivity().getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.main_FRG_fragment, categoryRVFragment).commit();
-            navigationView.setCheckedItem(R.id.nav_home);
-        }
-
-        @Override
-        public void onResume () {
-            super.onResume();
-            onBackPressedCallback = this;
-        }
-
-        @Override
-        public void onPause () {
-            super.onPause();
-            onBackPressedCallback = null;
-        }
-
-
-        public void setCallback (RecipeCallback recipeCallback){
-            this.recipeCallback = recipeCallback;
-        }
+    public void setCategoryRVFragment(CategoryRVFragment categoryRVFragment) {
+        this.categoryRVFragment = categoryRVFragment;
     }
+
+    @Override
+    public void onBackPressed() {
+        getActivity().getSupportFragmentManager().beginTransaction()
+                .replace(R.id.main_FRG_fragment, categoryRVFragment).commit();
+        navigationView.setCheckedItem(R.id.nav_home);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        onBackPressedCallback = this;
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        onBackPressedCallback = null;
+    }
+
+
+    public void setCallback(RecipeCallback recipeCallback) {
+        this.recipeCallback = recipeCallback;
+    }
+}

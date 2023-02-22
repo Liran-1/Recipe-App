@@ -17,8 +17,11 @@ public class RecipeSP {
     private static final String DB_FILE = "DB_FILE";
     private static final String RECIPE_RECORDS = "RECIPE_RECORDS";
     private static final String CATEGORY_RECORDS = "CATEGORY_RECORDS";
+    public static final String CATEGORY_CHOSEN = "CATEGORY_CHOSEN";
+    public static final String CATEGORY_CHOSEN_NUM = "CATEGORY_CHOSEN_NUM";
+    public static final String RECIPE_CHOSEN = "RECIPE_CHOSEN";
+    public static final String CHOSEN_RECIPE_NUM = "RECIPE_CHOSEN_NUM";
 
-    private final int HIGH_SCORE_LIST_SIZE = 10;
 
     private static RecipeSP instance = null;
     private SharedPreferences preferences;

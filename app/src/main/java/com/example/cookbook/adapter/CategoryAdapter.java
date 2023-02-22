@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.cookbook.R;
 import com.example.cookbook.callbacks.CategoryCallback;
+import com.example.cookbook.callbacks.CategoryUpdatedCallback;
 import com.example.cookbook.models.Category;
 import com.google.android.material.textview.MaterialTextView;
 
@@ -29,6 +30,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
     private Context context;
     private ArrayList<Category> categories;
     private CategoryCallback categoryCallback;
+    private CategoryUpdatedCallback categoryUpdatedCallback;
 
     public CategoryAdapter(Context context, ArrayList<Category> categories) {
         this.context    = context;
@@ -51,7 +53,6 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
         Category category = getItem(position);
 
         if(category != null) {
-            Log.d("NewCategory", String.valueOf(category.getImage()));
             holder.category_TXT_name.setText(category.getName());
 //            Bitmap bitmap = getBitmapFromURL(category.getImage());
 //            Glide.with(holder.itemView.getContext()).load(category.getImage())
@@ -106,12 +107,6 @@ public class CategoryViewHolder extends RecyclerView.ViewHolder{
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View view) {
-
-                }
-            });
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
                 public void onClick(View v) {
                     categoryCallback
                             .categoryClicked(getItem(getAbsoluteAdapterPosition()), getAbsoluteAdapterPosition());
@@ -123,5 +118,9 @@ public class CategoryViewHolder extends RecyclerView.ViewHolder{
 
     public void setCategoryCallback(CategoryCallback categoryCallback) {
         this.categoryCallback = categoryCallback;
+    }
+
+    public void setCategoryUpdatedCallback(CategoryUpdatedCallback categoryUpdatedCallback){
+        this.categoryUpdatedCallback = categoryUpdatedCallback;
     }
 }

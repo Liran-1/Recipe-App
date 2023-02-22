@@ -27,7 +27,6 @@ public class SettingsFragment extends Fragment implements OnBackPressedCallback 
     }
 
 
-
     public void setCategoryRVFragment(CategoryRVFragment categoryRVFragment) {
         this.categoryRVFragment = categoryRVFragment;
     }

@@ -29,7 +29,7 @@ public class Category {
         this.name = name;
         this.image = image;
         this.menuId = menuId;
-        this.recipes = getRecipes();
+//        this.recipes = getRecipes();
     }
 
     public String getName() {

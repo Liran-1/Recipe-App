@@ -23,7 +23,7 @@ public class LottiActivity extends AppCompatActivity {
             Intent intent = new Intent(getApplicationContext(), Login.class);
             startActivity(intent);
             finish();
-        }, 5000);
+        }, 500);
 
 
     }

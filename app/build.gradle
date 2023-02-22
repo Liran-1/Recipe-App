@@ -68,8 +68,15 @@ dependencies {
     implementation 'com.google.firebase:firebase-database'
     implementation 'com.firebaseui:firebase-ui-database:8.0.2'
 
-    //Glide
+    // Firebase Database Paging Adapter
+    implementation 'androidx.paging:paging-runtime:3.1.1'
+
+    // Glide
     implementation 'com.github.bumptech.glide:glide:4.14.2'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.14.2'
+
+    // Swipe refresh
+    implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
+
 
 }
