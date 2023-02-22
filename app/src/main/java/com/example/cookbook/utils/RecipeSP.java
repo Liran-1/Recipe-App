@@ -6,6 +6,7 @@ import android.util.Log;
 
 import com.example.cookbook.models.Category;
 import com.example.cookbook.models.Ingredient;
+import com.example.cookbook.models.Recipe;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 
@@ -17,10 +18,14 @@ public class RecipeSP {
     private static final String DB_FILE = "DB_FILE";
     private static final String RECIPE_RECORDS = "RECIPE_RECORDS";
     private static final String CATEGORY_RECORDS = "CATEGORY_RECORDS";
+    public static final String CREATE_NAME = "CREATE_NAME";
+    public static final String CREATE_DESCRIPTION = "CREATE_DESCRIPTION";
+    public static final String CREATE_INSTRUCTIONS = "CREATE_INSTRUCTIONS";
+    public static final String CREATE_INGREDIENTS = "CREATE_INGREDIENTS";
     public static final String CATEGORY_CHOSEN = "CATEGORY_CHOSEN";
     public static final String CATEGORY_CHOSEN_NUM = "CATEGORY_CHOSEN_NUM";
     public static final String RECIPE_CHOSEN = "RECIPE_CHOSEN";
-    public static final String CHOSEN_RECIPE_NUM = "RECIPE_CHOSEN_NUM";
+    public static final String RECIPE_CHOSEN_NUM = "RECIPE_CHOSEN_NUM";
 
 
     private static RecipeSP instance = null;
@@ -40,7 +45,7 @@ public class RecipeSP {
         return instance;
     }
 
-    public ArrayList<Ingredient> getIngredients() {
+    public ArrayList<Ingredient> getIngredients(String key) {
         TypeToken<List<Ingredient>> listType = new TypeToken<List<Ingredient>>() {};
         Gson gson = new Gson();
         String recipeData = preferences.getString(RECIPE_RECORDS, "");
@@ -49,14 +54,14 @@ public class RecipeSP {
         return Ingredients != null ? Ingredients : new ArrayList<>();
     }
 
-    public void setIngredients(ArrayList<Ingredient> currentIngredients) {
+    public void putIngredients(String key, ArrayList<Ingredient> currentIngredients) {
         ArrayList<Ingredient> ingredients = new ArrayList<>();
         Gson gson = new Gson();
         for (Ingredient ingredient : currentIngredients)
             ingredients.add(ingredient);
         String json = gson.toJson(ingredients);
         editor = preferences.edit();
-        editor.putString(RECIPE_RECORDS, json);
+        editor.putString(key, json);
         editor.commit();
         Log.d("SAVED_FILE", json);
     }
@@ -70,16 +75,33 @@ public class RecipeSP {
         return categories != null ? categories : new ArrayList<>();
     }
 
-    public void setCategories(ArrayList<Category> currentCategories) {
+    public void putCategories(String key, ArrayList<Category> currentCategories) {
         ArrayList<Category> categories = new ArrayList<>();
         Gson gson = new Gson();
         for (Category category : currentCategories)
             categories.add(category);
         String json = gson.toJson(categories);
         editor = preferences.edit();
-        editor.putString(RECIPE_RECORDS, json);
+        editor.putString(key, json);
         editor.commit();
         Log.d("SAVED_FILE", json);
+    }
+
+    public void putRecipe(String key ,Recipe recipe){
+        Gson gson = new Gson();
+        String json = gson.toJson(recipe);
+        editor = preferences.edit();
+        editor.putString(key, json);
+        editor.commit();
+        Log.d("SAVED_FILE", json);
+    }
+
+    public Recipe getRecipe(){
+        Gson gson = new Gson();
+        String recipeData = preferences.getString(RECIPE_CHOSEN, "");
+        Recipe recipe = gson.fromJson(recipeData, Recipe.class);
+        Log.d("LOADED FILE", recipeData);
+        return recipe;
     }
 
     public void putInt(String key, int value) {

@@ -55,6 +55,7 @@ public class CreateRecipeFragment extends Fragment implements OnBackPressedCallb
     private IngredientAdapter ingredientAdapter;
     private ArrayList<Ingredient> ingredients;
     private ArrayList<String> categoriesName;
+    private String name, description, instructions, category, image;
     private Uri cam_uri;
 
     public static OnBackPressedCallback onBackPressedCallback;
@@ -70,6 +71,9 @@ public class CreateRecipeFragment extends Fragment implements OnBackPressedCallb
         View view = inflater.inflate(R.layout.fragment_create_recipe, container, false);
 
         categoriesName = getCategoriesName();
+        if(ingredients == null)
+            ingredients = new ArrayList<>();
+
         findViews(view);
         initViews();
 
@@ -106,7 +110,7 @@ public class CreateRecipeFragment extends Fragment implements OnBackPressedCallb
 //            }
 //        });
 
-        ingredients = RecipeSP.getInstance().getIngredients();
+//        ingredients = RecipeSP.getInstance().getIngredients(RecipeSP.INGREDIENTS_FILLED);
 
         recipeCreation_IMG_picture  .setOnClickListener(view -> openCamera());
 
@@ -157,11 +161,11 @@ public class CreateRecipeFragment extends Fragment implements OnBackPressedCallb
 
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
-        String name         = recipeCreation_ETXT_name.getText().toString();
-        String description  = recipeCreation_ETXT_description.getText().toString();
-        String instructions = recipeCreation_ETXT_instructions.getText().toString();
-        String category     = recipeCreation_SPNR_categories.getSelectedItem().toString();
-        String image        = recipeCreation_IMG_picture.toString();
+        name         = recipeCreation_ETXT_name.getText().toString();
+        description  = recipeCreation_ETXT_description.getText().toString();
+        instructions = recipeCreation_ETXT_instructions.getText().toString();
+        category     = recipeCreation_SPNR_categories.getSelectedItem().toString();
+        image        = recipeCreation_IMG_picture.toString();
 //        String category     ="test";
         int likes           = 0;
 
@@ -171,6 +175,8 @@ public class CreateRecipeFragment extends Fragment implements OnBackPressedCallb
         recipeCreation_SPNR_categories.setSelection(0);
         recipeCreation_IMG_picture.setImageResource(R.drawable.open_camera);
         ingredients = new ArrayList<>();
+
+        clearInput();
 
         Recipe recipe = new Recipe(name, description, image, instructions, category, likes,  ingredients);
 
@@ -183,10 +189,26 @@ public class CreateRecipeFragment extends Fragment implements OnBackPressedCallb
         String[] category = getResources().getStringArray(R.array.Categories);
         return !TextUtils.isEmpty(recipeCreation_ETXT_name.getText()) &&
                 !TextUtils.isEmpty(recipeCreation_ETXT_description.getText()) &&
-                !TextUtils.isEmpty(recipeCreation_ETXT_instructions.getText()) &&
-                recipeCreation_SPNR_categories.getSelectedItem().toString().equals(category[0]);
+                !TextUtils.isEmpty(recipeCreation_ETXT_instructions.getText()) /*&&
+                recipeCreation_SPNR_categories.getSelectedItem().toString().equals(category[0])*/;
     }
 
+    private void saveInput(){
+        if(ingredients != null)
+            RecipeSP.getInstance().putIngredients(RecipeSP.CREATE_INGREDIENTS, ingredients);
+        if(!TextUtils.isEmpty(recipeCreation_ETXT_name.getText()))
+            RecipeSP.getInstance().putString(RecipeSP.CREATE_NAME, recipeCreation_ETXT_name.getText().toString());
+        if(!TextUtils.isEmpty(recipeCreation_ETXT_description.getText()))
+            RecipeSP.getInstance().putString(RecipeSP.CREATE_DESCRIPTION, recipeCreation_ETXT_description.getText().toString());
+        if(!TextUtils.isEmpty(recipeCreation_ETXT_instructions.getText()))
+            RecipeSP.getInstance().putString(RecipeSP.CREATE_INSTRUCTIONS, recipeCreation_ETXT_instructions.getText().toString());
+    }
+    private void clearInput(){
+            RecipeSP.getInstance().putIngredients(RecipeSP.CREATE_INGREDIENTS, new ArrayList<>());
+            RecipeSP.getInstance().putString(RecipeSP.CREATE_NAME, "");
+            RecipeSP.getInstance().putString(RecipeSP.CREATE_DESCRIPTION, "");
+            RecipeSP.getInstance().putString(RecipeSP.CREATE_INSTRUCTIONS, "");
+    }
     private void findViews(View view) {
         recipeCreation_ETXT_name            = view.findViewById(R.id.recipeCreation_ETXT_name);
         recipeCreation_ETXT_description     = view.findViewById(R.id.recipeCreation_ETXT_description);
@@ -287,12 +309,17 @@ public class CreateRecipeFragment extends Fragment implements OnBackPressedCallb
     public void onResume() {
         super.onResume();
         onBackPressedCallback = this;
+        RecipeSP.getInstance().getString(RecipeSP.CREATE_NAME, "");
+        RecipeSP.getInstance().getString(RecipeSP.CREATE_DESCRIPTION, "");
+        RecipeSP.getInstance().getString(RecipeSP.CREATE_INSTRUCTIONS, "");
+        RecipeSP.getInstance().getIngredients(RecipeSP.CREATE_INGREDIENTS);
     }
 
     @Override
     public void onPause() {
         super.onPause();
         onBackPressedCallback = null;
+        saveInput();
     }
 
     public void setCategoryRVFragment(CategoryRVFragment categoryRVFragment) {

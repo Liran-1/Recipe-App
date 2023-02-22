@@ -20,7 +20,7 @@
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
             android:scaleType="centerCrop"
-            android:src="@drawable/ic_launcher_background" />
+            android:src="@drawable/bread" />
 
         <!--        <com.google.android.material.imageview.ShapeableImageView-->
         <!--            android:id="@+id/recipe_IMG_favorite"-->

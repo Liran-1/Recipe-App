@@ -44,10 +44,8 @@ public class Ingredient {
 
     @Override
     public String toString() {
-        return "Ingredient{" +
-                "name='" + name + '\'' +
-                ", amount=" + amount +
-                ", units='" + units + '\'' +
-                '}';
+        StringBuffer sb = new StringBuffer();
+        sb.append(amount).append(" ").append(units).append(" of ").append(name).append("\n");
+        return sb.toString();
     }
 }

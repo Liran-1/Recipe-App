@@ -41,7 +41,7 @@ public class IngredientFragment extends Fragment {
     }
 
     private void initViews() {
-        ArrayList ingredients = RecipeSP.getInstance().getIngredients();
+        ArrayList<Ingredient> ingredients = RecipeSP.getInstance().getIngredients(RecipeSP.CREATE_INGREDIENTS);
         IngredientAdapter ingredientAdapter = new IngredientAdapter(getContext(), ingredients);
         recipeCreation_RV_ingredients.setHasFixedSize(true);
         recipeCreation_RV_ingredients.setLayoutManager(new LinearLayoutManager(getContext()));

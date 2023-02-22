@@ -13,4 +13,15 @@
     <string name="my_account">Мой Аккаунт</string>
     <string name="settings">Настройки</string>
     <string name="logout">Выйти</string>
+    <string name="description">Описание</string>
+    <string name="Units">Меры измерения</string>
+    <string name="name">Имя</string>
+    <string name="instructions">Инструкции</string>
+    <string name="add_recipe">Добавить рецепт</string>
+    <string name="category_name">Название категории</string>
+    <string name="ingredients">Ингредиенты</string>
+    <string name="change_language">Изменение языка</string>
+    <string name="hebrew">Иврит</string>
+    <string name="english">Английский</string>
+    <string name="russian">Русский</string>
 </resources>

@@ -121,8 +121,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 @Override
                 public void recipeClicked(Recipe recipe, int position) {
                     recipeFragment.setRecipeRVFragment(recipeRVFragment);
-                    RecipeSP.getInstance().putString(RecipeSP.RECIPE_CHOSEN, recipe.getName());
-                    RecipeSP.getInstance().putInt(RecipeSP.CHOSEN_RECIPE_NUM, position);
+                    RecipeSP.getInstance().putRecipe(RecipeSP.RECIPE_CHOSEN, recipe);
+//                    RecipeSP.getInstance().putInt(RecipeSP.RECIPE_CHOSEN_NUM, position);
                     getSupportFragmentManager().beginTransaction()
                             .replace(R.id.main_FRG_fragment, recipeFragment).commit();
                 }

@@ -14,4 +14,15 @@
     <string name="my_account">החשבון שלי</string>
     <string name="settings">הגדרות</string>
     <string name="logout">התנתקות</string>
+    <string name="description">תיאור</string>
+    <string name="Units">יחידות</string>
+    <string name="name">שם</string>
+    <string name="instructions">הוראות</string>
+    <string name="add_recipe">הוספת מתכון</string>
+    <string name="category_name">שם הקטגוריה</string>
+    <string name="ingredients">רכיבים</string>
+    <string name="change_language">שינוי שפה</string>
+    <string name="hebrew">עברית</string>
+    <string name="english">אנגלית</string>
+    <string name="russian">רוסית</string>
 </resources>

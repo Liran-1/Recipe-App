@@ -24,7 +24,7 @@
     <string name="login">Login</string>
     <string name="e_mail">E-mail</string>
     <string name="password">Password</string>
-    <string name="login_by_phone">Login by phone</string>
+    <string name="login_by_phone" translatable="false">Login by phone</string>
 
     <string name="register">Register</string>
     <string name="user_name">User Name</string>
@@ -44,4 +44,8 @@
     <string name="add_recipe">Add Recipe</string>
     <string name="category_name">Category name</string>
     <string name="ingredients">Ingredients</string>
+    <string name="change_language">Change Language</string>
+    <string name="hebrew">Hebrew</string>
+    <string name="english">English</string>
+    <string name="russian">Russian</string>
 </resources>

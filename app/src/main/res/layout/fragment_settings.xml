@@ -5,10 +5,66 @@
     android:layout_height="match_parent"
     tools:context=".fragments.SettingsFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:orientation="vertical">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/settings_LBL_changeLanguage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginStart="48dp"
+            android:layout_marginTop="48dp"
+            android:layout_marginEnd="48dp"
+            android:layout_marginBottom="48dp"
+            android:textSize="48sp"
+            android:textStyle="bold"
+            android:textColor="@color/white"
+            android:background="@color/cardview_dark_background"
+            android:text="@string/change_language"
+            android:textAlignment="center" />
+
+        <!--button view for hindi language-->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/settings_BTN_hebrew"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:background="@color/colorPrimary"
+            android:layout_below="@+id/settings_LBL_changeLanguage"
+            android:layout_centerHorizontal="true"
+            android:text="@string/hebrew"
+            android:textSize="20sp"
+            android:textColor="#ffffff" />
+
+        <!--button view for english language-->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/settings_BTN_english"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:background="@color/colorPrimary"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@id/settings_BTN_hebrew"
+            android:text="@string/english"
+            android:textSize="20sp"
+            android:textColor="#ffffff" />
+
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/settings_BTN_russian"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:background="@color/colorPrimary"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@id/settings_BTN_english"
+            android:textSize="20sp"
+            android:text="@string/russian"
+            android:textColor="#ffffff" />
+
+    </RelativeLayout>
 
 </FrameLayout>
