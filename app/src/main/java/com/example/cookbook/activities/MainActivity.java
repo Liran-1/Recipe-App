@@ -109,7 +109,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     backPressedCounter = 0;
                     recipeRVFragment.setCategoryRVFragment(categoryRVFragment);
 //                        recipeFragment.chosenCategory = category.getName();
-                    Log.d("ChosenCat", category.getName());
                     RecipeSP.getInstance().putString(RecipeSP.CATEGORY_CHOSEN, category.getName());
                     RecipeSP.getInstance().putInt(RecipeSP.CATEGORY_CHOSEN_NUM, position + 1);
 
@@ -235,34 +234,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     new String[]{Manifest.permission.CAMERA}, 101);
         }
     }
-
-//    private ArrayList<Category> getCategories() {
-//        if (categories == null)
-//            categories = new ArrayList<>();
-//        dbRef.child("Category").get().addOnCompleteListener(task -> {
-//            if (!task.isSuccessful()) {
-//                Log.e("firebase", "Error getting data", task.getException());
-//            } else {
-//                //                    categories = (ArrayList) task.getResult().getValue();
-//                Log.d("firebase", String.valueOf(task.getResult().getKey()));
-//                for (DataSnapshot dataSnapshot : task.getResult().getChildren()) {
-//                    String name = String.valueOf(dataSnapshot.child("Name").getValue());
-//                    String image = String.valueOf(dataSnapshot.child("Image").getValue());
-//                    String menuId = String.valueOf(dataSnapshot.getKey());
-//
-////                    ArrayList<Recipe> recipes = (ArrayList<Recipe>) dataSnapshot.child("Recipes").getValue();
-//                    //                        String menuId = String.valueOf(dataSnapshot.getKey());
-//                    Log.d("name", name);
-//                    Log.d("image", image);
-//                    Category category = new Category(name, image, menuId);
-//                    categories.add(category);
-////                    categoryAdapter.notifyItemInserted(categories.size());
-//                    Log.d("counted", String.valueOf(categories.size()));
-//                }
-//            }
-//        });
-//        return categories;
-//    }
 
     @Override
     public void onBackPressed() {

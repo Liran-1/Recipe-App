@@ -53,7 +53,6 @@ public class RecipeRVFragment extends Fragment implements OnBackPressedCallback 
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.recyclerview_recipe, container, false);
 
-//        Log.d("CatChosen", RecipeSP.getInstance().getString(RecipeSP.CHOSEN_CATEGORY, "Lunch"));
         categoryChosenNum = RecipeSP.getInstance().getInt(RecipeSP.CATEGORY_CHOSEN_NUM, 0);
         categoryChosenNumParsed = categoryChosenNum < 10 ? "0" + categoryChosenNum : String.valueOf(categoryChosenNum);
 
@@ -118,12 +117,9 @@ public class RecipeRVFragment extends Fragment implements OnBackPressedCallback 
                     }
 //                    int likes = (int) dataSnapshot.child("Image").getValue();
                     int likes = 0;
-                    //                        String menuId = String.valueOf(dataSnapshot.getKey());
-//                        Log.d("name", name);
-//                        Log.d("image", image);
+
 
                     Recipe recipe = new Recipe(name, description, image, instructions, categoryId, likes, ingredients);
-                    Log.d("recipes", String.valueOf(recipe));
                     recipes.add(recipe);
 
                 }
