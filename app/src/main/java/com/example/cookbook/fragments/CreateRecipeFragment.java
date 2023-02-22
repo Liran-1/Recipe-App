@@ -30,7 +30,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.cookbook.R;
 import com.example.cookbook.adapter.IngredientAdapter;
 import com.example.cookbook.callbacks.OnBackPressedCallback;
-import com.example.cookbook.models.Category;
 import com.example.cookbook.models.Ingredient;
 import com.example.cookbook.models.Recipe;
 import com.example.cookbook.utils.RecipeSP;
@@ -42,7 +41,6 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class CreateRecipeFragment extends Fragment implements OnBackPressedCallback {
@@ -95,10 +93,31 @@ public class CreateRecipeFragment extends Fragment implements OnBackPressedCallb
                         categories.add(name);
                     }
                 }
+                ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, categoriesName);
+                recipeCreation_SPNR_categories.setAdapter(adapter);
+
             });
+
 
             return categories;
 
+    }
+
+    private void findViews(View view) {
+        recipeCreation_ETXT_name            = view.findViewById(R.id.recipeCreation_ETXT_name);
+        recipeCreation_ETXT_description     = view.findViewById(R.id.recipeCreation_ETXT_description);
+        recipeCreation_IMG_picture          = view.findViewById(R.id.recipeCreation_IMG_picture);
+
+        ingredient_ETXT_ingredientName      = view.findViewById(R.id.ingredient_ETXT_ingredientName);
+        ingredient_ETXT_ingredientAmount    = view.findViewById(R.id.ingredient_ETXT_ingredientAmount);
+        ingredient_SPNR_ingredientUnit      = view.findViewById(R.id.ingredient_SPNR_ingredientUnit);
+        ingredient_BTN_addIngredient        = view.findViewById(R.id.ingredient_BTN_addIngredient);
+
+        recipeCreation_RV_ingredients       = view.findViewById(R.id.recipeCreation_RV_ingredients);
+
+        recipeCreation_ETXT_instructions    = view.findViewById(R.id.recipeCreation_ETXT_instructions);
+        recipeCreation_SPNR_categories      = view.findViewById(R.id.recipeCreation_SPNR_categories);
+        recipeCreation_BTN_addRecipe        = view.findViewById(R.id.recipeCreation_BTN_addRecipe);
     }
 
     private void initViews() {
@@ -116,7 +135,7 @@ public class CreateRecipeFragment extends Fragment implements OnBackPressedCallb
 
         recipeCreation_BTN_addRecipe.setOnClickListener(view -> addRecipe());
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, categoriesName);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), R.layout.spinner_item_my, categoriesName);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         for(String s: categoriesName){
             adapter.add(s);
@@ -155,42 +174,12 @@ public class CreateRecipeFragment extends Fragment implements OnBackPressedCallb
 //        ingredientAdapter.setIngredientAddedCallback(ingredientAddedCallback);
     }
 
-    private void addRecipe() {
-        if(checkInput())
-            return;
-
-        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-
-        name         = recipeCreation_ETXT_name.getText().toString();
-        description  = recipeCreation_ETXT_description.getText().toString();
-        instructions = recipeCreation_ETXT_instructions.getText().toString();
-        category     = recipeCreation_SPNR_categories.getSelectedItem().toString();
-        image        = recipeCreation_IMG_picture.toString();
-//        String category     ="test";
-        int likes           = 0;
-
-        recipeCreation_ETXT_name.getText().clear();
-        recipeCreation_ETXT_description.getText().clear();
-        recipeCreation_ETXT_instructions.getText().clear();
-        recipeCreation_SPNR_categories.setSelection(0);
-        recipeCreation_IMG_picture.setImageResource(R.drawable.open_camera);
-        ingredients = new ArrayList<>();
-
-        clearInput();
-
-        Recipe recipe = new Recipe(name, description, image, instructions, category, likes,  ingredients);
-
-        dbRef.child("users").child(firebaseUser.getUid())
-                .child("user-recipes").child(name).setValue(recipe);
-//        mDatabase.child("Category").child()
-    }
-
     private boolean checkInput() {
         String[] category = getResources().getStringArray(R.array.Categories);
         return !TextUtils.isEmpty(recipeCreation_ETXT_name.getText()) &&
                 !TextUtils.isEmpty(recipeCreation_ETXT_description.getText()) &&
-                !TextUtils.isEmpty(recipeCreation_ETXT_instructions.getText()) /*&&
-                recipeCreation_SPNR_categories.getSelectedItem().toString().equals(category[0])*/;
+                !TextUtils.isEmpty(recipeCreation_ETXT_instructions.getText()) &&
+                recipeCreation_SPNR_categories.getSelectedItem().toString().equals(category[0]);
     }
 
     private void saveInput(){
@@ -203,27 +192,12 @@ public class CreateRecipeFragment extends Fragment implements OnBackPressedCallb
         if(!TextUtils.isEmpty(recipeCreation_ETXT_instructions.getText()))
             RecipeSP.getInstance().putString(RecipeSP.CREATE_INSTRUCTIONS, recipeCreation_ETXT_instructions.getText().toString());
     }
+
     private void clearInput(){
             RecipeSP.getInstance().putIngredients(RecipeSP.CREATE_INGREDIENTS, new ArrayList<>());
             RecipeSP.getInstance().putString(RecipeSP.CREATE_NAME, "");
             RecipeSP.getInstance().putString(RecipeSP.CREATE_DESCRIPTION, "");
             RecipeSP.getInstance().putString(RecipeSP.CREATE_INSTRUCTIONS, "");
-    }
-    private void findViews(View view) {
-        recipeCreation_ETXT_name            = view.findViewById(R.id.recipeCreation_ETXT_name);
-        recipeCreation_ETXT_description     = view.findViewById(R.id.recipeCreation_ETXT_description);
-        recipeCreation_IMG_picture          = view.findViewById(R.id.recipeCreation_IMG_picture);
-
-        ingredient_ETXT_ingredientName      = view.findViewById(R.id.ingredient_ETXT_ingredientName);
-        ingredient_ETXT_ingredientAmount    = view.findViewById(R.id.ingredient_ETXT_ingredientAmount);
-        ingredient_SPNR_ingredientUnit      = view.findViewById(R.id.ingredient_SPNR_ingredientUnit);
-        ingredient_BTN_addIngredient        = view.findViewById(R.id.ingredient_BTN_addIngredient);
-
-        recipeCreation_RV_ingredients       = view.findViewById(R.id.recipeCreation_RV_ingredients);
-
-        recipeCreation_ETXT_instructions    = view.findViewById(R.id.recipeCreation_ETXT_instructions);
-        recipeCreation_SPNR_categories      = view.findViewById(R.id.recipeCreation_SPNR_categories);
-        recipeCreation_BTN_addRecipe        = view.findViewById(R.id.recipeCreation_BTN_addRecipe);
     }
 
     /////CAMERA/////
@@ -298,6 +272,41 @@ public class CreateRecipeFragment extends Fragment implements OnBackPressedCallb
 
     }
 
+    private void addRecipe() {
+        if(checkInput())
+            return;
+
+        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+
+        name         = recipeCreation_ETXT_name.getText().toString();
+        description  = recipeCreation_ETXT_description.getText().toString();
+        instructions = recipeCreation_ETXT_instructions.getText().toString();
+        category     = recipeCreation_SPNR_categories.getSelectedItem().toString();
+        image        = recipeCreation_IMG_picture.toString();
+//        String category     ="test";
+        int likes           = 0;
+
+        recipeCreation_ETXT_name.getText().clear();
+        recipeCreation_ETXT_description.getText().clear();
+        recipeCreation_ETXT_instructions.getText().clear();
+        recipeCreation_SPNR_categories.setSelection(0);
+        recipeCreation_IMG_picture.setImageResource(R.drawable.open_camera);
+        ingredients = new ArrayList<>();
+
+        clearInput();
+
+        Recipe recipe = new Recipe(name, description, image, instructions, category, likes,  ingredients);
+
+        dbRef.child("users").child(firebaseUser.getUid())
+                .child("user-recipes").child(name).setValue(recipe);
+//        mDatabase.child("Category").child()
+    }
+
+    public void setCategoryRVFragment(CategoryRVFragment categoryRVFragment) {
+        this.categoryRVFragment = categoryRVFragment;
+    }
+
+
     @Override
     public void onBackPressed() {
         getActivity().getSupportFragmentManager().beginTransaction()
@@ -322,7 +331,4 @@ public class CreateRecipeFragment extends Fragment implements OnBackPressedCallb
         saveInput();
     }
 
-    public void setCategoryRVFragment(CategoryRVFragment categoryRVFragment) {
-        this.categoryRVFragment = categoryRVFragment;
-    }
 }

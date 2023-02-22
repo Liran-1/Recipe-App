@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import com.example.cookbook.R;
 import com.example.cookbook.adapter.CategoryAdapter;
@@ -39,6 +40,7 @@ public class CategoryRVFragment extends Fragment {
 
     private FBCategoryAdapter fbCategoryAdapter;
     private CategoryCallback categoryCallback;
+    private ProgressBar home_PB_progressbar;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -62,6 +64,7 @@ public class CategoryRVFragment extends Fragment {
     }
 
     private void findViews(View view) {
+        home_PB_progressbar = view.findViewById(R.id.home_PB_progressbar);
         home_RV_categories = view.findViewById(R.id.home_RV_categories);
     }
 
@@ -122,7 +125,9 @@ public class CategoryRVFragment extends Fragment {
                     categories.add(category);
 //                    categoryAdapter.notifyItemInserted(categories.size());
                 }
-
+//                        categoryAdapter = new CategoryAdapter(getContext(), categories);
+//                        categoryAdapter.notifyDataSetChanged();
+                home_PB_progressbar.setVisibility(View.GONE);
                 home_RV_categories.setAdapter(categoryAdapter);
                 categoryAdapter.setCategoryCallback(categoryCallback);
             }

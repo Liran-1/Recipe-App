@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -47,6 +48,7 @@ public class RecipeRVFragment extends Fragment implements OnBackPressedCallback 
     private RecipeAdapter recipeAdapter;
     public static OnBackPressedCallback onBackPressedCallback;
     private RecipeCallback recipeCallback;
+    private ProgressBar home_PB_progressbar;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -65,6 +67,7 @@ public class RecipeRVFragment extends Fragment implements OnBackPressedCallback 
     }
 
     private void findViews(View view) {
+        home_PB_progressbar = view.findViewById(R.id.home_PB_progressbar);
         home_RV_recipes = view.findViewById(R.id.home_RV_recipes);
     }
 
@@ -123,6 +126,7 @@ public class RecipeRVFragment extends Fragment implements OnBackPressedCallback 
                     recipes.add(recipe);
 
                 }
+                home_PB_progressbar.setVisibility(View.GONE);
                 home_RV_recipes.setAdapter(recipeAdapter);
                 recipeAdapter.setRecipeCallback(recipeCallback);
             }

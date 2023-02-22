@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/food_background"
+    android:background="@color/background"
     android:orientation="vertical"
     tools:context=".activities.MainActivity">
 
@@ -48,7 +48,6 @@
             app:menu="@menu/navigation_menu" />
 
     </androidx.drawerlayout.widget.DrawerLayout>
-
 
 
 </RelativeLayout>

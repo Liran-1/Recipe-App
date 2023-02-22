@@ -49,7 +49,7 @@ public class SettingsFragment extends Fragment implements OnBackPressedCallback 
         settings_BTN_hebrew.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                context = LocaleHelper.setLocale(getActivity(), "en");
+                context = LocaleHelper.setLocale(getActivity(), "iw");
                 resources = context.getResources();
                 settings_LBL_changeLanguage.setText(resources.getString(R.string.change_language));
             }
@@ -58,7 +58,7 @@ public class SettingsFragment extends Fragment implements OnBackPressedCallback 
         settings_BTN_english.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                context = LocaleHelper.setLocale(getActivity(), "iw");
+                context = LocaleHelper.setLocale(getActivity(), "en");
                 resources = context.getResources();
                 settings_LBL_changeLanguage.setText(resources.getString(R.string.change_language));
             }
