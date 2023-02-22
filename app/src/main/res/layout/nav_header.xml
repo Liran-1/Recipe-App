@@ -18,11 +18,11 @@
         android:src="@drawable/nav_header_user"
         android:layout_marginEnd="4dp"/>
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/navHeader_TXT_username"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Username"
+        android:text="@string/user_name"
         android:textColor="@color/black"
         android:textStyle="bold"
         android:textSize="28sp"

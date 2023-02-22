@@ -1,4 +1,4 @@
-package com.example.cookbook;
+package com.example.cookbook.activities;
 
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
@@ -11,7 +11,8 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.widget.Toast;
 
-import com.example.cookbook.activities.MainActivity;
+import com.example.cookbook.R;
+import com.example.cookbook.models.User;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract;
 import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult;
@@ -19,11 +20,13 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.Arrays;
 import java.util.List;
 
-public class Login extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity {
 
     //    private TextInputEditText etEmail, etPass;
 //    private MaterialButton bLogin;
@@ -31,6 +34,9 @@ public class Login extends AppCompatActivity {
 //    private TextView textView;
     private Toast toaster;
     private FirebaseAuth mAuth;
+    private FirebaseUser firebaseUser;
+    private FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
+    private DatabaseReference dbRef = mDatabase.getReference();
 
 
     @Override
@@ -42,11 +48,14 @@ public class Login extends AppCompatActivity {
 //        initViews();
 
         mAuth = FirebaseAuth.getInstance();
-        FirebaseUser user = mAuth.getCurrentUser();
-        if (user == null) {
+        firebaseUser = mAuth.getCurrentUser();
+        if (firebaseUser == null) {
             login();
         } else {
 
+            User user = new User(firebaseUser.getDisplayName(), firebaseUser.getEmail());
+            dbRef.child("users").child(firebaseUser.getUid())
+                    .setValue(user);
             userLoggedIn();
 
         }
@@ -198,14 +207,14 @@ public class Login extends AppCompatActivity {
     }
 
     private void userLoggedIn() {
-        Intent intent = new Intent(Login.this, MainActivity.class);
+        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
         startActivity(intent);
         finish();
     }
 
     private boolean checkIfEmpty(String input, String msg) {
         if (TextUtils.isEmpty(input)) {
-            toaster = Toast.makeText(Login.this, "Enter " + msg, Toast.LENGTH_SHORT);
+            toaster = Toast.makeText(LoginActivity.this, "Enter " + msg, Toast.LENGTH_SHORT);
             toaster.show();
             return true;
         }

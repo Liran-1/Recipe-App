@@ -1,22 +1,22 @@
 package com.example.cookbook.models;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 public class Recipe {
 
-    private String name, description, image, instructions, categoryId;
+    private String name, description, image, instructions;
     private int likes;
-    private ArrayList<Ingredient> ingredients;
+    private Map<String, Ingredient> ingredients;
 
     public Recipe() {
     }
 
-    public Recipe(String name, String description, String image, String instructions, String categoryId, int likes, ArrayList<Ingredient> ingredients) {
+    public Recipe(String name, String description, String image, String instructions, int likes, Map<String, Ingredient> ingredients) {
         this.name = name;
         this.description = description;
         this.image = image;
         this.instructions = instructions;
-        this.categoryId = categoryId;
         this.likes = likes;
         this.ingredients = ingredients;
     }
@@ -53,19 +53,11 @@ public class Recipe {
         this.instructions = instructions;
     }
 
-    public String getCategoryId() {
-        return categoryId;
-    }
-
-    public void setCategoryId(String categoryId) {
-        this.categoryId = categoryId;
-    }
-
-    public ArrayList<Ingredient> getIngredients() {
+    public Map<String, Ingredient> getIngredients() {
         return ingredients;
     }
 
-    public void setIngredients(ArrayList<Ingredient> ingredients) {
+    public void setIngredients(Map<String, Ingredient> ingredients) {
         this.ingredients = ingredients;
     }
 
@@ -80,7 +72,6 @@ public class Recipe {
                 ", description='" + description + '\'' +
                 ", image='" + image + '\'' +
                 ", instructions='" + instructions + '\'' +
-                ", categoryId='" + categoryId + '\'' +
                 ", likes=" + likes +
                 ", ingredients=" + ingredients +
                 '}';

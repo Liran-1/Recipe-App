@@ -23,6 +23,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.mlkit.nl.translate.Translator;
 
 import java.util.ArrayList;
 
@@ -41,6 +42,7 @@ public class CategoryRVFragment extends Fragment {
     private FBCategoryAdapter fbCategoryAdapter;
     private CategoryCallback categoryCallback;
     private ProgressBar home_PB_progressbar;
+    private Translator translator;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -69,6 +71,7 @@ public class CategoryRVFragment extends Fragment {
     }
 
     private void initViews() {
+        home_PB_progressbar.setVisibility(View.VISIBLE);
         categoryAdapter = new CategoryAdapter(getContext(), categories);
         home_RV_categories.setHasFixedSize(true);
         home_RV_categories.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -118,19 +121,29 @@ public class CategoryRVFragment extends Fragment {
 //                        categories = (ArrayList) task.getResult().getValue();
                 Log.d("firebase", String.valueOf(task.getResult().getKey()));
                 for (DataSnapshot dataSnapshot : task.getResult().getChildren()) {
-                    String name = String.valueOf(dataSnapshot.child("Name").getValue());
+                    String name = dataSnapshot.getKey().replace('_', ' ');
                     String image = String.valueOf(dataSnapshot.child("Image").getValue());
                     String menuId = String.valueOf(dataSnapshot.getKey());
-                    Category category = new Category(name, image, menuId);
+
+                    Category category;
+
+                    if (translator != null) {
+                        String translatedName = translator.translate(name).getResult();
+                        Log.d("TranslatedName", translatedName);
+                        category = new Category(translatedName, image, menuId);
+
+                    } else {
+                        category = new Category(name, image, menuId);
+                    }
                     categories.add(category);
 //                    categoryAdapter.notifyItemInserted(categories.size());
                 }
 //                        categoryAdapter = new CategoryAdapter(getContext(), categories);
 //                        categoryAdapter.notifyDataSetChanged();
-                home_PB_progressbar.setVisibility(View.GONE);
-                home_RV_categories.setAdapter(categoryAdapter);
-                categoryAdapter.setCategoryCallback(categoryCallback);
             }
+            home_PB_progressbar.setVisibility(View.GONE);
+            home_RV_categories.setAdapter(categoryAdapter);
+            categoryAdapter.setCategoryCallback(categoryCallback);
         });
     }
 
@@ -155,5 +168,9 @@ public class CategoryRVFragment extends Fragment {
 
     public void setCallback(CategoryCallback categoryCallback) {
         this.categoryCallback = categoryCallback;
+    }
+
+    public void setTranslator(Translator translator) {
+        this.translator = translator;
     }
 }

@@ -16,11 +16,11 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.cookbook.Login;
 import com.example.cookbook.R;
 import com.example.cookbook.callbacks.CategoryCallback;
 import com.example.cookbook.callbacks.RecipeCallback;
@@ -38,6 +38,7 @@ import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.textview.MaterialTextView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
@@ -49,7 +50,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
     private DrawerLayout drawerLayout;
-    private TextView navHeader_TXT_username;
+    private MaterialTextView navHeader_TXT_username;
     private ImageView navHeader_IMG_userImg;
     private Toolbar toolbar;
     public static NavigationView navigationView;
@@ -81,14 +82,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 //        user = mAuth.getCurrentUser();
 //        mDatabase = FirebaseDatabase.getInstance().getReference();
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-        user = new User(firebaseUser.getDisplayName(), firebaseUser.getEmail(), firebaseUser.getPhoneNumber());
+        user = new User(firebaseUser.getDisplayName(), firebaseUser.getEmail());
         mDatabase = FirebaseDatabase.getInstance();
         dbRef = mDatabase.getReference();
 
-//        categories = getCategories();
-//        RecipeSP.getInstance().setCategories(categories);
-
         Log.d("User", String.valueOf(user));
+        Log.d("User", user.getName());
 
         findViews();
         initViews();
@@ -96,38 +95,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         checkPermissions();
 
         if (savedInstanceState == null) {
-            categoryRVFragment      = new CategoryRVFragment();
-            createRecipeFragment    = new CreateRecipeFragment();
-            recipeRVFragment        = new RecipeRVFragment();
-            userFragment            = new UserFragment();
-            settingsFragment        = new SettingsFragment();
-            recipeFragment          = new RecipeFragment();
-
-            categoryRVFragment.setCallback(new CategoryCallback() {
-                @Override
-                public void categoryClicked(Category category, int position) {
-                    backPressedCounter = 0;
-                    recipeRVFragment.setCategoryRVFragment(categoryRVFragment);
-//                        recipeFragment.chosenCategory = category.getName();
-                    RecipeSP.getInstance().putString(RecipeSP.CATEGORY_CHOSEN, category.getName());
-                    RecipeSP.getInstance().putInt(RecipeSP.CATEGORY_CHOSEN_NUM, position + 1);
-
-                    getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.main_FRG_fragment, recipeRVFragment).commit();
-                }
-            });
-
-            recipeRVFragment.setCallback(new RecipeCallback() {
-                @Override
-                public void recipeClicked(Recipe recipe, int position) {
-                    recipeFragment.setRecipeRVFragment(recipeRVFragment);
-                    RecipeSP.getInstance().putRecipe(RecipeSP.RECIPE_CHOSEN, recipe);
-//                    RecipeSP.getInstance().putInt(RecipeSP.RECIPE_CHOSEN_NUM, position);
-                    getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.main_FRG_fragment, recipeFragment).commit();
-                }
-            });
-
+            setFragments();
             getSupportFragmentManager().beginTransaction().replace(R.id.main_FRG_fragment, categoryRVFragment).commit();
 
             navigationView.setCheckedItem(R.id.nav_home);
@@ -135,12 +103,51 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     }
 
+    private void setFragments() {
+        categoryRVFragment      = new CategoryRVFragment();
+        createRecipeFragment    = new CreateRecipeFragment();
+        recipeRVFragment        = new RecipeRVFragment();
+        userFragment            = new UserFragment();
+        settingsFragment        = new SettingsFragment();
+        recipeFragment          = new RecipeFragment();
+
+        categoryRVFragment.setCallback(new CategoryCallback() {
+            @Override
+            public void categoryClicked(Category category, int position) {
+                backPressedCounter = 0;
+                recipeRVFragment.setCategoryRVFragment(categoryRVFragment);
+//                        recipeFragment.chosenCategory = category.getName();
+                RecipeSP.getInstance().putString(RecipeSP.CATEGORY_CHOSEN, category.getName());
+                RecipeSP.getInstance().putInt(RecipeSP.CATEGORY_CHOSEN_NUM, position + 1);
+
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.main_FRG_fragment, recipeRVFragment).commit();
+            }
+        });
+
+        recipeRVFragment.setCallback(new RecipeCallback() {
+            @Override
+            public void recipeClicked(Recipe recipe, int position) {
+                recipeFragment.setRecipeRVFragment(recipeRVFragment);
+                RecipeSP.getInstance().putRecipe(RecipeSP.RECIPE_CHOSEN, recipe);
+//                    RecipeSP.getInstance().putInt(RecipeSP.RECIPE_CHOSEN_NUM, position);
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.main_FRG_fragment, recipeFragment).commit();
+            }
+        });
+
+
+    }
+
     private void findViews() {
         toolbar = findViewById(R.id.main_TLBR_toolbar);
         drawerLayout = findViewById(R.id.main_DRWR_loggedIn);
-        navHeader_TXT_username = findViewById(R.id.navHeader_TXT_username);
-        navHeader_IMG_userImg = findViewById(R.id.navHeader_IMG_userImg);
         navigationView = findViewById(R.id.main_NAVVW_NavDrawer);
+
+        View headerView = navigationView.getHeaderView(0);
+        navHeader_TXT_username = headerView.findViewById(R.id.navHeader_TXT_username);
+        navHeader_IMG_userImg = headerView.findViewById(R.id.navHeader_IMG_userImg);
+
     }
 
     private void initViews() {
@@ -150,8 +157,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private void setDrawer() {
         String name = user.getName();
-//        if(name != null)
-//            navHeader_TXT_username.setText(name);
+        if(name != null)
+            navHeader_TXT_username.setText(name);
     }
 
     private void initDrawerMenu() {
@@ -169,6 +176,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         // to make the Navigation drawer icon always appear on the action bar
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+
     }
 
 
@@ -273,7 +282,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         toaster.show();
                     }
                 });
-        Intent intent = new Intent(MainActivity.this, Login.class);
+        Intent intent = new Intent(MainActivity.this, LoginActivity.class);
         startActivity(intent);
         finish();
     }

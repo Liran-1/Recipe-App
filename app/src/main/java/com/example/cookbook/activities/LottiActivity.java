@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.os.Handler;
 
 import com.airbnb.lottie.LottieAnimationView;
-import com.example.cookbook.Login;
 import com.example.cookbook.R;
 
 public class LottiActivity extends AppCompatActivity {
@@ -20,10 +19,10 @@ public class LottiActivity extends AppCompatActivity {
         LottieAnimationView lottieAnimationView = findViewById(R.id.lottie_ANIM_lottie);
         lottieAnimationView.resumeAnimation();
         new Handler().postDelayed(() -> {
-            Intent intent = new Intent(getApplicationContext(), Login.class);
+            Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
             startActivity(intent);
             finish();
-        }, 500);
+        }, 5000);
 
 
     }

@@ -76,7 +76,11 @@ dependencies {
     annotationProcessor 'com.github.bumptech.glide:compiler:4.14.2'
 
     // Swipe refresh
-    implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
+//    implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
+
+    // Google ML Kit
+    implementation 'com.google.mlkit:translate:17.0.1'
+
 
 
 }

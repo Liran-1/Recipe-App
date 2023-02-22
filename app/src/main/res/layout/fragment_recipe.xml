@@ -14,12 +14,12 @@
             android:id="@+id/recipe_LBL_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:gravity="start"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="8dp"
-            android:background="@color/cardview_dark_background"
+            android:layout_marginTop="20dp"
             android:text="@string/name"
-            android:textColor="@color/white"
-            android:textSize="20sp"
+            android:textColor="@color/black"
+            android:textSize="40sp"
             android:textStyle="bold" />
 
         <com.google.android.material.textview.MaterialTextView
@@ -27,40 +27,62 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/recipe_LBL_name"
-            android:layout_centerHorizontal="true"
+            android:layout_marginStart="12dp"
             android:layout_marginTop="8dp"
-            android:background="@color/cardview_dark_background"
             android:text="@string/description"
-            android:textColor="@color/white"
+            android:textColor="@color/black"
             android:textSize="20sp"
             android:textStyle="bold" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/recipe_LBL_ingredientsTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/recipe_LBL_description"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/what_we_need"
+            android:textColor="@color/black"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/recipe_LBL_ingredients"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/recipe_LBL_description"
-            android:layout_centerHorizontal="true"
+            android:layout_below="@id/recipe_LBL_ingredientsTitle"
+            android:layout_marginStart="12dp"
             android:layout_marginTop="8dp"
-            android:background="@color/cardview_dark_background"
             android:text="@string/ingredients"
-            android:textColor="@color/white"
+            android:textColor="@color/black"
             android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/recipe_LBL_instructionsTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/recipe_LBL_ingredients"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/how_to_make"
+            android:textColor="@color/black"
+            android:textSize="24sp"
             android:textStyle="bold" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/recipe_LBL_instructions"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/recipe_LBL_ingredients"
-            android:layout_centerHorizontal="true"
+            android:layout_below="@id/recipe_LBL_instructionsTitle"
+            android:layout_marginStart="12dp"
             android:layout_marginTop="8dp"
-            android:background="@color/cardview_dark_background"
+            android:layout_marginBottom="28dp"
             android:text="@string/instructions"
-            android:textColor="@color/white"
+            android:textColor="@color/black"
             android:textSize="20sp"
             android:textStyle="bold" />
-
 
     </RelativeLayout>
 

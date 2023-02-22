@@ -56,47 +56,47 @@ public class Category {
         this.menuId = menuId;
     }
 
-    public ArrayList<Recipe> getRecipes() {
-        if (recipes == null)
-            recipes = new ArrayList<>();
-        dbRef.child("Category").child(menuId).get().addOnCompleteListener(task -> {
-            if (!task.isSuccessful()) {
-                Log.e("firebase", "Error getting data", task.getException());
-            } else {
-                //                    categories = (ArrayList) task.getResult().getValue();
-                Log.d("firebase", String.valueOf(task.getResult().getKey()));
-                for (DataSnapshot dataSnapshot : task.getResult().getChildren()) {
-
-                    String name = String.valueOf(dataSnapshot.child("Name").getValue());
-                    String description = String.valueOf(dataSnapshot.child("Description").getValue());
-                    String image = String.valueOf(dataSnapshot.child("Image").getValue());
-                    String instructions = String.valueOf(dataSnapshot.child("Instructions").getValue());
-                    String categoryId = String.valueOf(dataSnapshot.child("CategoryId").getValue());
-                    GenericTypeIndicator<Map<String, Ingredient>> genericTypeIndicator = new GenericTypeIndicator<Map<String, Ingredient>>() {};
-                    Map<String,Ingredient> ingredientsMap = dataSnapshot.child("Ingredients")
-                            .getValue(genericTypeIndicator);
-
-                    ArrayList<Ingredient> ingredients = new ArrayList<>();
-                    if(ingredientsMap != null)
-//                        ingredients = ingredientsMap.values();
-                        ingredients = new ArrayList<>(ingredientsMap.values());
-//                    int likes = (int) dataSnapshot.child("Image").getValue();
-                    int likes = 0;
-                    //                        String menuId = String.valueOf(dataSnapshot.getKey());
-                    Log.d("name", name);
-                    Log.d("image", image);
-                    Recipe recipe = new Recipe(name, description, image, instructions, categoryId, likes, ingredients);
-                    recipes.add(recipe);
-
-//                    Log.d("counted", String.valueOf(categories.size()));
-                }
-            }
-        });
-
-        Log.d("RECIPES", String.valueOf(recipes));
-        return recipes;
-
-    }
+//    public ArrayList<Recipe> getRecipes() {
+//        if (recipes == null)
+//            recipes = new ArrayList<>();
+//        dbRef.child("Category").child(menuId).get().addOnCompleteListener(task -> {
+//            if (!task.isSuccessful()) {
+//                Log.e("firebase", "Error getting data", task.getException());
+//            } else {
+//                //                    categories = (ArrayList) task.getResult().getValue();
+//                Log.d("firebase", String.valueOf(task.getResult().getKey()));
+//                for (DataSnapshot dataSnapshot : task.getResult().getChildren()) {
+//
+//                    String name = String.valueOf(dataSnapshot.child("Name").getValue());
+//                    String description = String.valueOf(dataSnapshot.child("Description").getValue());
+//                    String image = String.valueOf(dataSnapshot.child("Image").getValue());
+//                    String instructions = String.valueOf(dataSnapshot.child("Instructions").getValue());
+////                    String categoryId = String.valueOf(dataSnapshot.child("CategoryId").getValue());
+//                    GenericTypeIndicator<Map<String, Ingredient>> genericTypeIndicator = new GenericTypeIndicator<Map<String, Ingredient>>() {};
+//                    Map<String,Ingredient> ingredientsMap = dataSnapshot.child("Ingredients")
+//                            .getValue(genericTypeIndicator);
+//
+//                    ArrayList<Ingredient> ingredients = new ArrayList<>();
+//                    if(ingredientsMap != null)
+////                        ingredients = ingredientsMap.values();
+//                        ingredients = new ArrayList<>(ingredientsMap.values());
+////                    int likes = (int) dataSnapshot.child("Image").getValue();
+//                    int likes = 0;
+//                    //                        String menuId = String.valueOf(dataSnapshot.getKey());
+//                    Log.d("name", name);
+//                    Log.d("image", image);
+//                    Recipe recipe = new Recipe(name, description, image, instructions, likes, ingredients);
+//                    recipes.add(recipe);
+//
+////                    Log.d("counted", String.valueOf(categories.size()));
+//                }
+//            }
+//        });
+//
+//        Log.d("RECIPES", String.valueOf(recipes));
+//        return recipes;
+//
+//    }
 
     public void setRecipes(ArrayList<Recipe> recipes) {
         this.recipes = recipes;

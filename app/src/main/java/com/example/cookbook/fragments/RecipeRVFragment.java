@@ -18,6 +18,7 @@ import com.example.cookbook.R;
 import com.example.cookbook.adapter.RecipeAdapter;
 import com.example.cookbook.callbacks.OnBackPressedCallback;
 import com.example.cookbook.callbacks.RecipeCallback;
+import com.example.cookbook.managers.DataManager;
 import com.example.cookbook.models.Ingredient;
 import com.example.cookbook.models.Recipe;
 import com.example.cookbook.utils.RecipeSP;
@@ -42,6 +43,7 @@ public class RecipeRVFragment extends Fragment implements OnBackPressedCallback 
     //    private ShapeableImageView recipe_IMG_favorite;
     private CategoryRVFragment categoryRVFragment;                  // for return
     private RecyclerView home_RV_recipes;
+    private String categoryChosen;
     private int categoryChosenNum;
     private String categoryChosenNumParsed;
     private ArrayList<Recipe> recipes;
@@ -55,8 +57,12 @@ public class RecipeRVFragment extends Fragment implements OnBackPressedCallback 
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.recyclerview_recipe, container, false);
 
-        categoryChosenNum = RecipeSP.getInstance().getInt(RecipeSP.CATEGORY_CHOSEN_NUM, 0);
-        categoryChosenNumParsed = categoryChosenNum < 10 ? "0" + categoryChosenNum : String.valueOf(categoryChosenNum);
+        categoryChosen       = RecipeSP.getInstance().getString(RecipeSP.CATEGORY_CHOSEN, "");
+//        categoryChosenNum       = RecipeSP.getInstance().getInt(RecipeSP.CATEGORY_CHOSEN_NUM, 0);
+//        categoryChosenNumParsed = categoryChosenNum < 10 ? "0" + categoryChosenNum : String.valueOf(categoryChosenNum);
+
+//        DataManager dataManager = new DataManager();
+//        dataManager.getRecipesFromDB(view);
 
         getRecipesFromDB();
 
@@ -68,7 +74,7 @@ public class RecipeRVFragment extends Fragment implements OnBackPressedCallback 
 
     private void findViews(View view) {
         home_PB_progressbar = view.findViewById(R.id.home_PB_progressbar);
-        home_RV_recipes = view.findViewById(R.id.home_RV_recipes);
+        home_RV_recipes     = view.findViewById(R.id.home_RV_recipes);
     }
 
     private void initViews() {
@@ -79,7 +85,7 @@ public class RecipeRVFragment extends Fragment implements OnBackPressedCallback 
 //                home_RV_recipes.getAdapter().notifyItemChanged(position);
 //            }
 //        });
-
+        home_PB_progressbar.setVisibility(View.VISIBLE);
         recipeAdapter = new RecipeAdapter(getContext(), recipes);
         home_RV_recipes.setHasFixedSize(true);
         home_RV_recipes.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -90,7 +96,7 @@ public class RecipeRVFragment extends Fragment implements OnBackPressedCallback 
 
     private ArrayList<Recipe> getRecipesFromDB() {
         recipes = new ArrayList<>();
-        dbRef.child("Category").child(categoryChosenNumParsed).child("Recipes").get().addOnCompleteListener(task -> {
+        dbRef.child("Category").child(categoryChosen).child("Recipes").get().addOnCompleteListener(task -> {
             if (!task.isSuccessful()) {
                 Log.e("firebase", "Error getting data", task.getException());
             } else {
@@ -105,7 +111,7 @@ public class RecipeRVFragment extends Fragment implements OnBackPressedCallback 
                     String description = String.valueOf(dataSnapshot.child("description").getValue());
                     String image = String.valueOf(dataSnapshot.child("image").getValue());
                     String instructions = String.valueOf(dataSnapshot.child("instructions").getValue());
-                    String categoryId = categoryChosenNumParsed;
+//                    String categoryId = categoryChosenNumParsed;
 
                     GenericTypeIndicator<Map<String, Ingredient>> genericTypeIndicator =
                             new GenericTypeIndicator<Map<String, Ingredient>>() {
@@ -113,23 +119,23 @@ public class RecipeRVFragment extends Fragment implements OnBackPressedCallback 
                     Map<String, Ingredient> ingredientsMap = dataSnapshot.child("ingredients")
                             .getValue(genericTypeIndicator);
 
-                    ArrayList<Ingredient> ingredients = new ArrayList<>();
-                    if (ingredientsMap != null) {
-//                        ingredients = ingredientsMap.values();
-                        ingredients = new ArrayList<>(ingredientsMap.values());
-                    }
+//                    ArrayList<Ingredient> ingredients = new ArrayList<>();
+//                    if (ingredientsMap != null) {
+////                        ingredients = ingredientsMap.values();
+//                        ingredients = new ArrayList<>(ingredientsMap.values());
+//                    }
 //                    int likes = (int) dataSnapshot.child("Image").getValue();
                     int likes = 0;
 
 
-                    Recipe recipe = new Recipe(name, description, image, instructions, categoryId, likes, ingredients);
+                    Recipe recipe = new Recipe(name, description, image, instructions, likes, ingredientsMap);
                     recipes.add(recipe);
 
                 }
-                home_PB_progressbar.setVisibility(View.GONE);
-                home_RV_recipes.setAdapter(recipeAdapter);
-                recipeAdapter.setRecipeCallback(recipeCallback);
             }
+            home_PB_progressbar .setVisibility(View.GONE);
+            home_RV_recipes     .setAdapter(recipeAdapter);
+            recipeAdapter       .setRecipeCallback(recipeCallback);
         });
         return recipes;
     }

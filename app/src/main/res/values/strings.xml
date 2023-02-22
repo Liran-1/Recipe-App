@@ -24,7 +24,7 @@
     <string name="login">Login</string>
     <string name="e_mail">E-mail</string>
     <string name="password">Password</string>
-    <string name="login_by_phone" translatable="false">Login by phone</string>
+<!--    <string name="login_by_phone" translatable="false">Login by phone</string>-->
 
     <string name="register">Register</string>
     <string name="user_name">User Name</string>
@@ -48,4 +48,8 @@
     <string name="hebrew">Hebrew</string>
     <string name="english">English</string>
     <string name="russian">Russian</string>
+    <string name="what_we_need">What we need:</string>
+    <string name="how_to_make">How to make:</string>
+    <string name="amount">Amount</string>
+    <string name="ingredient_s">Ingredient(s)</string>
 </resources>

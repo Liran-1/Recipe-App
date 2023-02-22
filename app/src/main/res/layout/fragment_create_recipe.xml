@@ -61,7 +61,7 @@
                 android:layout_margin="4dp"
                 android:layout_weight="4"
                 android:background="@color/white"
-                android:hint="Amount"
+                android:hint="@string/amount"
                 android:inputType="numberDecimal"
                 android:textSize="20sp" />
 
@@ -72,7 +72,7 @@
                 android:layout_margin="4dp"
                 android:layout_weight="6"
                 android:background="@color/white"
-                android:hint="Ingredient(s)"
+                android:hint="@string/ingredient_s"
                 android:maxLines="2"
                 android:textSize="20sp" />
 

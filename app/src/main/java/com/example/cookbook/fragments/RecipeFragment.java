@@ -34,6 +34,7 @@ public class RecipeFragment extends Fragment implements OnBackPressedCallback {
         findViews(view);
         initViews();
 
+
         return view;
     }
 

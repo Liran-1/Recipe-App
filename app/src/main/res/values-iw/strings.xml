@@ -25,4 +25,8 @@
     <string name="hebrew">עברית</string>
     <string name="english">אנגלית</string>
     <string name="russian">רוסית</string>
+    <string name="what_we_need">מה אנחנו צריכים:</string>
+    <string name="how_to_make">איך מכינים:</string>
+    <string name="amount">כמות</string>
+    <string name="ingredient_s">רכיב(ים)</string>
 </resources>

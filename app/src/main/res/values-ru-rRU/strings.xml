@@ -24,4 +24,8 @@
     <string name="hebrew">Иврит</string>
     <string name="english">Английский</string>
     <string name="russian">Русский</string>
+    <string name="what_we_need">Что нам нужно</string>
+    <string name="how_to_make">Как это сделать</string>
+    <string name="amount">Количество</string>
+    <string name="ingredient_s">Ингредиент(ы)</string>
 </resources>
