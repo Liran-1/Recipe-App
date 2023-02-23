@@ -11,8 +11,10 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -33,6 +35,7 @@ import com.example.cookbook.fragments.UserFragment;
 import com.example.cookbook.models.Category;
 import com.example.cookbook.models.Recipe;
 import com.example.cookbook.models.User;
+import com.example.cookbook.utils.LocaleHelper;
 import com.example.cookbook.utils.RecipeSP;
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -70,6 +73,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private DatabaseReference dbRef;
     private User user;
     private ArrayList<Category> categories;
+    private Resources resources;
+
     private int backPressedCounter = 0;
 
 
@@ -86,8 +91,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mDatabase = FirebaseDatabase.getInstance();
         dbRef = mDatabase.getReference();
 
-        Log.d("User", String.valueOf(user));
-        Log.d("User", user.getName());
+        checkLanguage();
 
         findViews();
         initViews();
@@ -101,6 +105,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             navigationView.setCheckedItem(R.id.nav_home);
         }
 
+    }
+
+    private void checkLanguage() {
+        String languageTarget = LocaleHelper.getLocale(this);
+        Context context = LocaleHelper.setLocale(this, languageTarget);
+        resources = context.getResources();
     }
 
     private void setFragments() {

@@ -61,15 +61,19 @@ public class CreateRecipeFragment extends Fragment implements OnBackPressedCallb
 
     public static OnBackPressedCallback onBackPressedCallback;
 
-    private FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-    private FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
-    private DatabaseReference dbRef = mDatabase.getReference();
+    private FirebaseUser firebaseUser;
+    private FirebaseDatabase mDatabase ;
+    private DatabaseReference dbRef;
     private CategoryRVFragment categoryRVFragment;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_create_recipe, container, false);
+
+        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        mDatabase = FirebaseDatabase.getInstance();
+        dbRef = mDatabase.getReference();
 
         categoriesName = getCategoriesName();
         if (ingredients == null)
@@ -83,8 +87,8 @@ public class CreateRecipeFragment extends Fragment implements OnBackPressedCallb
 
     private ArrayList<String> getCategoriesName() {
         ArrayList<String> categories = new ArrayList<>();
-        String[] category = getResources().getStringArray(R.array.Categories);
-        categories.add(category[0]);
+//        String[] category = getResources().getStringArray(R.array.Categories);
+//        categories.add(category[0]);
         dbRef.child("Category").get().addOnCompleteListener(task -> {
             if (!task.isSuccessful()) {
                 Log.e("firebase", "Error getting data", task.getException());
@@ -126,14 +130,6 @@ public class CreateRecipeFragment extends Fragment implements OnBackPressedCallb
 
     private void initViews() {
         ingredient_BTN_addIngredient.setOnClickListener(view -> ingredientAddClicked());
-//        setCallback(new IngredientRemoveCallback() {
-//            @Override
-//            public void userHighScoreClicked(Ingredient ingredient, int pos) {
-//                ingredientRemoveCallback.removeIngredient(ingredient);
-//            }
-//        });
-
-//        ingredients = RecipeSP.getInstance().getIngredients(RecipeSP.INGREDIENTS_FILLED);
 
         recipeCreation_IMG_picture.setOnClickListener(view -> openCamera());
 
@@ -164,18 +160,11 @@ public class CreateRecipeFragment extends Fragment implements OnBackPressedCallb
         recipeCreation_RV_ingredients.setHasFixedSize(true);
         recipeCreation_RV_ingredients.setLayoutManager(new LinearLayoutManager(getContext()));
         recipeCreation_RV_ingredients.setAdapter(ingredientAdapter);
-//        ingredientAdapter.setIngredientRemoveCallback(ingredientRemoveCallback);
-        ingredientAdapter.setOnRemoveClicked(new IngredientAdapter.IngredientRemoveClicked() {
-            @Override
-            public void onRemoveClicked(int position) {
-                ingredients.remove(position);
-                ingredientAdapter.notifyItemRemoved(position);
-            }
+        ingredientAdapter.setOnRemoveClicked(position -> {
+            ingredients.remove(position);
+            ingredientAdapter.notifyItemRemoved(position);
         });
 
-
-//        ingredientAdapter.setIngredientRemoveCallback(ingredientRemoveCallback);
-//        ingredientAdapter.setIngredientAddedCallback(ingredientAddedCallback);
     }
 
     private boolean isInputFull() {
@@ -199,13 +188,13 @@ public class CreateRecipeFragment extends Fragment implements OnBackPressedCallb
     }
 
     private void clearInput() {
-//        RecipeSP.getInstance().putIngredients(RecipeSP.CREATE_INGREDIENTS, new ArrayList<>());
-//        RecipeSP.getInstance().putString(RecipeSP.CREATE_NAME, "");
-//        RecipeSP.getInstance().putString(RecipeSP.CREATE_DESCRIPTION, "");
-//        RecipeSP.getInstance().putString(RecipeSP.CREATE_INSTRUCTIONS, "");
-//
-//        ingredientAdapter = new IngredientAdapter(getContext(), ingredients);
-//        recipeCreation_RV_ingredients.setAdapter(ingredientAdapter);
+        RecipeSP.getInstance().putIngredients(RecipeSP.CREATE_INGREDIENTS, new ArrayList<>());
+        RecipeSP.getInstance().putString(RecipeSP.CREATE_NAME, "");
+        RecipeSP.getInstance().putString(RecipeSP.CREATE_DESCRIPTION, "");
+        RecipeSP.getInstance().putString(RecipeSP.CREATE_INSTRUCTIONS, "");
+
+        ingredientAdapter = new IngredientAdapter(getContext(), ingredients);
+        recipeCreation_RV_ingredients.setAdapter(ingredientAdapter);
 
     }
 
@@ -295,14 +284,14 @@ public class CreateRecipeFragment extends Fragment implements OnBackPressedCallb
         image = recipeCreation_IMG_picture.toString();
         int likes = 0;
 
-//        recipeCreation_ETXT_name.getText().clear();
-//        recipeCreation_ETXT_description.getText().clear();
-//        recipeCreation_ETXT_instructions.getText().clear();
-//        recipeCreation_SPNR_categories.setSelection(0);
-//        recipeCreation_IMG_picture.setImageResource(R.drawable.open_camera);
-//        ingredients = new ArrayList<>();
+        recipeCreation_ETXT_name.getText().clear();
+        recipeCreation_ETXT_description.getText().clear();
+        recipeCreation_ETXT_instructions.getText().clear();
+        recipeCreation_SPNR_categories.setSelection(0);
+        recipeCreation_IMG_picture.setImageResource(R.drawable.open_camera);
+        ingredients = new ArrayList<>();
 
-//        clearInput();
+        clearInput();
 
         category = category.replace(' ', '_');
 
@@ -310,11 +299,11 @@ public class CreateRecipeFragment extends Fragment implements OnBackPressedCallb
 
         writeNewRecipeToDB(category, recipe);
 
-
-//        mDatabase.child("Category").child()
     }
 
     private void writeNewRecipeToDB(String category, Recipe recipe) {
+        //check how many recipes there are, add next one.
+        //Using name as key would not allow having multiple different recipes for the same thing.
         ArrayList<Integer> numOfRecipes = new ArrayList<>();
         dbRef.child("Category").child(category).get().addOnCompleteListener(task -> {
             if (!task.isSuccessful()) {

@@ -60,46 +60,32 @@ public class SettingsFragment extends Fragment implements OnBackPressedCallback 
         // in order to change the language with the help of
         // LocaleHelper class
 
-        settings_BTN_hebrew.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String from = LocaleHelper.getLocale(getActivity()), to = "iw";
+        settings_BTN_hebrew.setOnClickListener(view -> {
+            String languageSource = LocaleHelper.getLocale(getActivity()), languageTarget = "iw";
 
-                Translator translator = setTranslator(from, to);;
-                getTranslations(translator);
+            context = LocaleHelper.setLocale(getActivity(), languageTarget);
+            resources = context.getResources();
 
-                context = LocaleHelper.setLocale(getActivity(), "iw");
-                resources = context.getResources();
-//                settings_LBL_changeLanguage.setText(resources.getString(R.string.change_language));
-            }
+            Translator translator = setTranslator(languageSource, languageTarget);
+            getTranslations(translator);
         });
 
-        settings_BTN_english.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String from = LocaleHelper.getLocale(getActivity()), to = "en";
+        settings_BTN_english.setOnClickListener(view -> {
+            String languageSource = LocaleHelper.getLocale(getActivity()), languageTarget = "en";
 
-                Translator translator = setTranslator(from, to);;
-                getTranslations(translator);
-                context = LocaleHelper.setLocale(getActivity(), "en");
-                resources = context.getResources();
-//                settings_LBL_changeLanguage.setText(resources.getString(R.string.change_language));
-//                refreshUI();
-            }
+            context = LocaleHelper.setLocale(getActivity(), languageTarget);
+            resources = context.getResources();
+            Translator translator = setTranslator(languageSource, languageTarget);
+            getTranslations(translator);
         });
 
-        settings_BTN_russian.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String from = LocaleHelper.getLocale(getActivity()), to = "ru";
+        settings_BTN_russian.setOnClickListener(view -> {
+            String languageSource = LocaleHelper.getLocale(getActivity()), languageTarget = "ru";
 
-                Translator translator = setTranslator(from, to);
-                getTranslations(translator);
-
-                context = LocaleHelper.setLocale(getActivity(), "ru");
-                resources = context.getResources();
-//                settings_LBL_changeLanguage.setText(resources.getString(R.string.change_language));
-            }
+            context = LocaleHelper.setLocale(getActivity(), languageTarget);
+            resources = context.getResources();
+            Translator translator = setTranslator(languageSource, languageTarget);
+            getTranslations(translator);
         });
     }
 
@@ -128,7 +114,7 @@ public class SettingsFragment extends Fragment implements OnBackPressedCallback 
             Intent intent = new Intent(getActivity(), LottiActivity.class);
             startActivity(intent);
             getActivity().finish();
-        }, 3000);
+        }, 2000);
 
     }
 

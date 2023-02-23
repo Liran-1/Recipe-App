@@ -2,6 +2,7 @@ package com.example.cookbook.fragments;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -18,6 +19,8 @@ import com.example.cookbook.adapter.CategoryAdapter;
 import com.example.cookbook.adapter.FBCategoryAdapter;
 import com.example.cookbook.callbacks.CategoryCallback;
 import com.example.cookbook.models.Category;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -125,17 +128,30 @@ public class CategoryRVFragment extends Fragment {
                     String image = String.valueOf(dataSnapshot.child("Image").getValue());
                     String menuId = String.valueOf(dataSnapshot.getKey());
 
-                    Category category;
+                    Category[] category = new Category[1];
+
+
 
                     if (translator != null) {
-                        String translatedName = translator.translate(name).getResult();
-                        Log.d("TranslatedName", translatedName);
-                        category = new Category(translatedName, image, menuId);
+                        translator.translate(name).addOnSuccessListener(
+                                        new OnSuccessListener() {
+                                            @Override
+                                            public void onSuccess(Object o) {
+                                                String translatedName = o.toString();
+                                                category[0] = new Category(translatedName, image, menuId);
+                                                Log.d("TranslatedName", translatedName);
+                                            }
+                                        })
+                                .addOnFailureListener(e ->
+                                        category[0] = new Category(name, image, menuId));
+
+//                                .getResult();
+//                        category[0] = new Category(translatedName, image, menuId);
 
                     } else {
-                        category = new Category(name, image, menuId);
+                        category[0] = new Category(name, image, menuId);
                     }
-                    categories.add(category);
+                    categories.add(category[0]);
 //                    categoryAdapter.notifyItemInserted(categories.size());
                 }
 //                        categoryAdapter = new CategoryAdapter(getContext(), categories);

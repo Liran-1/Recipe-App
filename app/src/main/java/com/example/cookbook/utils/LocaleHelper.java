@@ -31,8 +31,7 @@ public class LocaleHelper {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         String language = preferences.getString(SELECTED_LANGUAGE,"");
         Log.d("Language", language);
-        return preferences.getString(SELECTED_LANGUAGE,"");
-
+        return preferences.getString(SELECTED_LANGUAGE,"en");
     }
 
     private static void persist(Context context, String language) {
